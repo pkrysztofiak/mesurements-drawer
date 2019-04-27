@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: blue;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarController">
+   <children>
+      <ToggleButton fx:id="lineToolButton" mnemonicParsing="false" text="Line">
+         <toggleGroup>
+            <ToggleGroup fx:id="toolsToggleGroup" />
+         </toggleGroup>
+      </ToggleButton>
+      <ToggleButton fx:id="rectangleToolButton" mnemonicParsing="false" text="Rectangle" toggleGroup="$toolsToggleGroup" />
+   </children>
+</VBox>
