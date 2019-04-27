@@ -9,7 +9,7 @@ public abstract class PolygonDrawingBehaviour {
 
     protected final ObservableList<Point> points = FXCollections.observableArrayList();
     protected final ObservableList<Node> children = FXCollections.observableArrayList();
-    
+
     public ObservableList<Point> getPoints() {
         return points;
     }
