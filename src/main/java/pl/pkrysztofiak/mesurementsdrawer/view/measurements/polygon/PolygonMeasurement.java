@@ -81,17 +81,11 @@ public class PolygonMeasurement extends Measurement {
     private class Behaviour {
 
         private void onPointAdded(Point point) {
-            Observable.merge(
-                    JavaFxObservable.changesOf(point.previousPointProperty()).map(Change::getNewVal),
-                    JavaFxObservable.changesOf(point.nextPointProperty()).map(Change::getNewVal))
+        	JavaFxObservable.changesOf(point.nextPointProperty()).map(Change::getNewVal)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .takeUntil(pointRemovedObservable.filter(point::equals))
-            .subscribe(newPoint -> {
-            	if (!points.contains(newPoint)) {
-            		points.add(newPoint);
-            	}
-            });
+            .subscribe(points::add);
         }
 
         private void onDrawingBehaviourChanged(Change<Optional<PolygonDrawingBehaviour>> change) {
