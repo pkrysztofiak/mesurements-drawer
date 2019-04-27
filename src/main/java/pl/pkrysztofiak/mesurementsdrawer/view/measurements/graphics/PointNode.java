@@ -9,6 +9,7 @@ public abstract class PointNode<N extends Node> {
 
 	protected N node;
 
+	protected OnMouseHoverAbstract<N> onMouseHover;
 	protected final ObjectProperty<OnMouseHoverAbstract<N>> onMouseHoverProperty = new SimpleObjectProperty<>();
 
 	public PointNode(N node) {
@@ -17,5 +18,9 @@ public abstract class PointNode<N extends Node> {
 
 	public N getNode() {
 		return node;
+	}
+
+	protected void setOnMouseHover(OnMouseHoverAbstract<N> onMouseHover) {
+		this.onMouseHover = onMouseHover;
 	}
 }

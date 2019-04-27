@@ -8,11 +8,13 @@ public class PolygonPointCircle extends PointNode<Circle> implements OnMouseHove
 
 	public PolygonPointCircle(Circle circle) {
 		super(circle);
-		onMouseHoverProperty.set(new OnMouseHoverCircleLazy(circle));
+		setOnMouseHover(new OnMouseHoverCircleLazy(circle));
+//		onMouseHoverProperty.set(new OnMouseHoverCircleLazy(circle));
 	}
 
 	@Override
 	public void onMouseHover(boolean value) {
-		onMouseHoverProperty.get().onMouseHover(value);
+		onMouseHover.onMouseHover(value);
+//		onMouseHoverProperty.get().onMouseHover(value);
 	}
 }
