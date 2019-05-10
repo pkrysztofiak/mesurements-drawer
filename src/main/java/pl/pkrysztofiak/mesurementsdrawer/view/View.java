@@ -9,6 +9,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -23,23 +24,15 @@ public class View {
 
     private final Stage stage = new Stage();
 
-//    private final ToggleGroup toolsToggleGroup = new ToggleGroup();
-//    private final ToggleButton polygonToolButton = new ToggleButton("Polygon");
-//    private final ToggleButton lineToolButton = new ToggleButton("Line");
-
-    private final ToolbarView toolbarView = new ToolbarView();
-
-//    private final HBox toolbarHbox = new HBox(polygonToolButton, lineToolButton);
     private final GridPane panelsGridPane = new GridPane();
-    private final VBox vBox = new VBox(toolbarView, panelsGridPane);
+    private final BorderPane borderPane = new BorderPane(panelsGridPane);
+
     private final ObservableList<Panel> panels = FXCollections.observableArrayList();
 
     private final Observable<Panel> panelAddedObservable = JavaFxObservable.additionsOf(panels);
 
     public View() {
     	VBox.setVgrow(panelsGridPane, Priority.ALWAYS);
-
-//    	toolsToggleGroup.getToggles().addAll(polygonToolButton, lineToolButton);
     }
 
     public void show() {
@@ -70,7 +63,7 @@ public class View {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
 
-        stage.setScene(new Scene(vBox));
+        stage.setScene(new Scene(borderPane));
         stage.setX(screenBounds.getMinX());
         stage.setY(screenBounds.getMinY());
         stage.setWidth(screenBounds.getWidth());
@@ -81,5 +74,9 @@ public class View {
 
     public Observable<Panel> panelCreatedObservable() {
         return panelAddedObservable;
+    }
+
+    public void setToolbarView(ToolbarView toolbarView) {
+    	borderPane.setTop(toolbarView);
     }
 }

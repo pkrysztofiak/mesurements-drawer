@@ -12,6 +12,7 @@ import pl.pkrysztofiak.mesurementsdrawer.controller.tool.ToolController;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.view.View;
+import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class Controller {
 
@@ -27,7 +28,7 @@ public class Controller {
     private final ObjectProperty<PanelController> selectedPanelControllerProperty = new SimpleObjectProperty<>();
     private final Observable<PanelController> selectedPanelControllerObservable = JavaFxObservable.valuesOf(selectedPanelControllerProperty);
 
-    private final ToolbarController toolbarController = new ToolbarController();
+    private final ToolbarController toolbarController;
 
     private final ToolController toolController;
 
@@ -35,7 +36,14 @@ public class Controller {
         super();
         this.model = model;
         this.view = view;
+
+        ToolbarView toolbarView = new ToolbarView();
+        view.setToolbarView(toolbarView);
+
+        toolbarController = new ToolbarController(toolbarView, model);
         toolController = new ToolController(model);
+
+
 
         initSubscriptions();
         view.show();
