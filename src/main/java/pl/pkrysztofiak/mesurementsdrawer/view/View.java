@@ -9,29 +9,29 @@ import javafx.geometry.HPos;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.Panel;
+import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class View {
 
     private final Stage stage = new Stage();
 
-    private final ToggleGroup toolsToggleGroup = new ToggleGroup();
-    private final ToggleButton polygonToolButton = new ToggleButton("Polygon");
-    private final ToggleButton lineToolButton = new ToggleButton("Line");
+//    private final ToggleGroup toolsToggleGroup = new ToggleGroup();
+//    private final ToggleButton polygonToolButton = new ToggleButton("Polygon");
+//    private final ToggleButton lineToolButton = new ToggleButton("Line");
 
-    private final HBox toolbarHbox = new HBox(polygonToolButton, lineToolButton);
+    private final ToolbarView toolbarView = new ToolbarView();
+
+//    private final HBox toolbarHbox = new HBox(polygonToolButton, lineToolButton);
     private final GridPane panelsGridPane = new GridPane();
-    private final VBox vBox = new VBox(toolbarHbox, panelsGridPane);
+    private final VBox vBox = new VBox(toolbarView, panelsGridPane);
     private final ObservableList<Panel> panels = FXCollections.observableArrayList();
 
     private final Observable<Panel> panelAddedObservable = JavaFxObservable.additionsOf(panels);
@@ -39,7 +39,7 @@ public class View {
     public View() {
     	VBox.setVgrow(panelsGridPane, Priority.ALWAYS);
 
-    	toolsToggleGroup.getToggles().addAll(polygonToolButton, lineToolButton);
+//    	toolsToggleGroup.getToggles().addAll(polygonToolButton, lineToolButton);
     }
 
     public void show() {
