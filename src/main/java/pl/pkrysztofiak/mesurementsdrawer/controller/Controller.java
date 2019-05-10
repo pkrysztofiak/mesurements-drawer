@@ -1,5 +1,7 @@
 package pl.pkrysztofiak.mesurementsdrawer.controller;
 
+import java.util.Optional;
+
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import javafx.beans.binding.Bindings;
@@ -8,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.pkrysztofiak.mesurementsdrawer.controller.panel.PanelController;
+import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.view.View;
@@ -29,8 +32,6 @@ public class Controller {
 
     private final ToolbarController toolbarController;
 
-//    private final ToolController toolController;
-
     public Controller(Model model, View view) {
         super();
         this.model = model;
@@ -40,7 +41,6 @@ public class Controller {
         view.setToolbarView(toolbarView);
 
         toolbarController = new ToolbarController(toolbarView, model);
-//        toolController = new ToolController(model);
 
         initSubscriptions();
         view.show();
@@ -52,14 +52,14 @@ public class Controller {
 
         panelControllerAddedObservable.subscribe(behaviour::onPanelControllerAdded);
         panelControllerRemovedObservable.subscribe(behaviour::onPanelControllerRemoved);
+
+        Observable.combineLatest(selectedPanelControllerObservable, toolbarController.selectedToolObservable(), behaviour::onChanged)
+        .subscribe();
     }
 
     private class Behaviour {
 
         private void onPanelControllerAdded(PanelController panelController) {
-//            panelController.mouseReleasedObservable().takeUntil(panelControllerRemovedObservable.filter(panelController::equals))
-//            .subscribe(toolController.mouseReleasedPublishable()::onNext);
-
             panelController.mouseAnyObservable().map(mouseEvent -> panelController).takeUntil(panelControllerRemovedObservable.filter(panelController::equals))
             .subscribe(selectedPanelControllerProperty::set);
 
@@ -73,9 +73,12 @@ public class Controller {
         private void onSelectedPanelControllerChanged(PanelController selectedPanelController) {
             selectedPanelController.setSelected(true);
             Observable.fromIterable(panelsControllers).filter(panelController -> panelController.unequals(selectedPanelController)).subscribe(panelController -> panelController.setSelected(false));
+        }
 
-            toolbarController.setSelectedPanelController(selectedPanelController);
-//            toolController.setSelectedPanelController(selectedPanelController);
+        private Optional<Void> onChanged(PanelController selectedPanelController, Tool selectedTool) {
+        	selectedTool.setSelectedPanelController(selectedPanelController);
+        	selectedPanelController.setEventsReceiver(selectedTool);
+        	return Optional.empty();
         }
     }
 }

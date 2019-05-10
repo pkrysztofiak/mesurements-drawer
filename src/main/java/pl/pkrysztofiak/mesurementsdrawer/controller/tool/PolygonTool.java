@@ -35,7 +35,7 @@ public class PolygonTool extends Tool {
 
         private void onMouseReleased(MouseEvent mouseEvent) {
             System.out.println("PolygonTool onMouseReleased");
-            Optional.ofNullable(activePanelController.get()).ifPresent(panelController -> {
+            Optional.ofNullable(selectedPanelController.get()).ifPresent(panelController -> {
                 System.out.println("active panel controller present");
                 PolygonMeasurement polygonMeasurement = new PolygonMeasurement();
                 panelController.setEventsReceiver(polygonMeasurement);
@@ -44,8 +44,13 @@ public class PolygonTool extends Tool {
         }
 
         private void onMeasurementCreated(Measurement measurement) {
-            Optional.ofNullable(activePanelController.get()).ifPresent(panelController -> panelController.addMeasurement(measurement));
+            Optional.ofNullable(selectedPanelController.get()).ifPresent(panelController -> panelController.addMeasurement(measurement));
         }
     }
+
+	@Override
+	public String toString() {
+		return "PolygonTool";
+	}
 
 }

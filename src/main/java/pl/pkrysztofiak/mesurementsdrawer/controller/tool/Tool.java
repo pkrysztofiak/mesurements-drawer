@@ -7,7 +7,7 @@ import pl.pkrysztofiak.mesurementsdrawer.controller.panel.PanelController;
 
 public abstract class Tool implements EventsReceiver {
 
-    protected final ObjectProperty<PanelController> activePanelController = new SimpleObjectProperty<>();
+    protected final ObjectProperty<PanelController> selectedPanelController = new SimpleObjectProperty<>();
 
     public Tool() {
     }
@@ -15,7 +15,7 @@ public abstract class Tool implements EventsReceiver {
     public abstract ToolType getType();
 
 
-    public void setActivePanelController(PanelController selectedPanelController) {
-        this.activePanelController.set(selectedPanelController);
+    public void setSelectedPanelController(PanelController panelController) {
+        selectedPanelController.set(panelController);
     }
 }

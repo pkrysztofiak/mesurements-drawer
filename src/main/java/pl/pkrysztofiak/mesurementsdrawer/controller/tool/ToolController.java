@@ -16,8 +16,8 @@ public class ToolController {
     private final ObjectProperty<Tool> selectedToolProperty = new SimpleObjectProperty<>();
     private final Observable<Tool> selectedToolObservable = JavaFxObservable.valuesOf(selectedToolProperty);
 
-    private final ObjectProperty<PanelController> activePanelControllerProperty = new SimpleObjectProperty<>();
-    private final Observable<PanelController> activePanelControllerObservable = JavaFxObservable.valuesOf(activePanelControllerProperty);
+    private final ObjectProperty<PanelController> selectedPanelControllerProperty = new SimpleObjectProperty<>();
+    private final Observable<PanelController> selectedPanelControllerObservable = JavaFxObservable.valuesOf(selectedPanelControllerProperty);
 
     public ToolController(Model model) {
         this.model = model;
@@ -29,15 +29,15 @@ public class ToolController {
     }
 
     private void initSubscriptions() {
-        activePanelControllerObservable.subscribe(behaviour::onSelectedPanelControllerChanged);
+        selectedPanelControllerObservable.subscribe(behaviour::onSelectedPanelControllerChanged);
 
         selectedToolObservable.switchMap(selectedTool ->
-            activePanelControllerObservable.doOnNext(selectedTool::setActivePanelController))
+            selectedPanelControllerObservable.doOnNext(selectedTool::setSelectedPanelController))
         .subscribe();
     }
 
     public void setSelectedPanelController(PanelController panelController) {
-        activePanelControllerProperty.set(panelController);
+        selectedPanelControllerProperty.set(panelController);
     }
 
     public final Observable<Tool> selectedToolObservable() {
