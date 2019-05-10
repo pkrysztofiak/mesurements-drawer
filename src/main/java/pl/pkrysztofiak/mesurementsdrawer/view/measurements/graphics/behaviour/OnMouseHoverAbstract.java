@@ -12,5 +12,4 @@ public abstract class OnMouseHoverAbstract<N extends Node> implements OnMouseHov
 
 		JavaFxObservable.valuesOf(node.hoverProperty()).subscribe(this::onMouseHover);
 	}
-
 }

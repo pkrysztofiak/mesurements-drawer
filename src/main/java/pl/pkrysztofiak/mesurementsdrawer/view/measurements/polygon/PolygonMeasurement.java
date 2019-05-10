@@ -29,8 +29,6 @@ public class PolygonMeasurement extends Measurement {
     private final ObjectProperty<Optional<PolygonDrawingBehaviour>> drawingBehaviourProperty = new SimpleObjectProperty<>(Optional.empty());
     private final Observable<Change<Optional<PolygonDrawingBehaviour>>> drawingBehaviourChangeObservablbe = JavaFxObservable.changesOf(drawingBehaviourProperty);
 
-
-
     public PolygonMeasurement() {
         initSubscriptions();
         drawingBehaviourProperty.set(Optional.of(new PolygonUnfinishedDrawingBehaviour()));
@@ -81,7 +79,8 @@ public class PolygonMeasurement extends Measurement {
     private class Behaviour {
 
         private void onPointAdded(Point point) {
-        	JavaFxObservable.changesOf(point.nextPointProperty()).map(Change::getNewVal)
+        	JavaFxObservable.changesOf(point.nextPointProperty())
+        	.map(Change::getNewVal)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .takeUntil(pointRemovedObservable.filter(point::equals))
