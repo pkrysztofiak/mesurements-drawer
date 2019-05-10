@@ -12,12 +12,13 @@ public class PolygonTool extends Tool {
     private final Behaviour behaviour = new Behaviour();
     private final PolygonDrawer polygonDrawer = new PolygonDrawer();
 
+//    private final PublishSubject<PolygonMeasurement> polygonMeasurementCreatedPublishable = PublishSubject.create();
+
     public PolygonTool() {
         initSubscriptions();
     }
 
     private void initSubscriptions() {
-//        mouseReleasedObservable.subscribe(behaviour::onMouseReleased);
         polygonDrawer.measurementCreatedObservable().subscribe(behaviour::onMeasurementCreated);
     }
 
@@ -31,16 +32,25 @@ public class PolygonTool extends Tool {
         behaviour.onMouseReleased(mouseEvent);
     }
 
+//    public Observable<PolygonMeasurement> polygonMeasurementCreatedObservable() {
+//    	return polygonMeasurementCreatedPublishable;
+//    }
+
     private class Behaviour {
 
         private void onMouseReleased(MouseEvent mouseEvent) {
             System.out.println("PolygonTool onMouseReleased");
-            Optional.ofNullable(selectedPanelController.get()).ifPresent(panelController -> {
-                System.out.println("active panel controller present");
-                PolygonMeasurement polygonMeasurement = new PolygonMeasurement();
-                panelController.setEventsReceiver(polygonMeasurement);
-                panelController.addMeasurement(polygonMeasurement);
-            });
+            PolygonMeasurement polygonMeasurement = new PolygonMeasurement();
+            measurementCreatedPubslishable.onNext(polygonMeasurement);
+
+//            polygonMeasurementCreatedPublishable.onNext(polygonMeasurement);
+
+//            Optional.ofNullable(selectedPanelController.get()).ifPresent(panelController -> {
+//                System.out.println("active panel controller present");
+//                PolygonMeasurement polygonMeasurement = new PolygonMeasurement();
+//                panelController.setEventsReceiver(polygonMeasurement);
+//                panelController.addMeasurement(polygonMeasurement);
+//            });
         }
 
         private void onMeasurementCreated(Measurement measurement) {

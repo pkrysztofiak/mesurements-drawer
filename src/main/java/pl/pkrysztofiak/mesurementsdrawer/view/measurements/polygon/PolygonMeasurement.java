@@ -32,6 +32,9 @@ public class PolygonMeasurement extends Measurement {
     public PolygonMeasurement() {
         initSubscriptions();
         drawingBehaviourProperty.set(Optional.of(new PolygonUnfinishedDrawingBehaviour()));
+
+        JavaFxObservable.emitOnChanged(getChildren())
+        .subscribe(children -> System.out.println("PolygonMeasurement.children=" + children));
     }
 
     private void initSubscriptions() {
@@ -46,6 +49,7 @@ public class PolygonMeasurement extends Measurement {
 
     @Override
     public void onMouseReleased(MouseEvent mouseEvent) {
+    	System.out.println("PolygonMeasurement.onMouseReleased()");
         Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
         if (points.isEmpty()) {
             point.setSelected(true);
@@ -89,11 +93,13 @@ public class PolygonMeasurement extends Measurement {
 
         private void onDrawingBehaviourChanged(Change<Optional<PolygonDrawingBehaviour>> change) {
             change.getOldVal().ifPresent(drawingBehaviour -> {
+            	System.out.println("Unbind");
                 Bindings.unbindContentBidirectional(drawingBehaviour.getPoints(), points);
                 Bindings.unbindContentBidirectional(getChildren(), drawingBehaviour.getChildren());
             });
 
             change.getNewVal().ifPresent(drawingBehaviour -> {
+            	System.out.println("Bind");
                 Bindings.bindContentBidirectional(drawingBehaviour.getPoints(), points);
                 Bindings.bindContentBidirectional(getChildren(), drawingBehaviour.getChildren());
             });

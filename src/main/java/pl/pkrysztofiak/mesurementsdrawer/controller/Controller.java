@@ -9,11 +9,13 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.controller.panel.PanelController;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.view.View;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class Controller {
@@ -29,6 +31,9 @@ public class Controller {
 
     private final ObjectProperty<PanelController> selectedPanelControllerProperty = new SimpleObjectProperty<>();
     private final Observable<PanelController> selectedPanelControllerObservable = JavaFxObservable.valuesOf(selectedPanelControllerProperty);
+
+    private final ObjectProperty<EventsReceiver> eventsReceiverProperty = new SimpleObjectProperty<>();
+    private final Observable<EventsReceiver> eventsReceiverObservable = JavaFxObservable.valuesOf(eventsReceiverProperty);
 
     private final ToolbarController toolbarController;
 
@@ -55,6 +60,9 @@ public class Controller {
 
         Observable.combineLatest(selectedPanelControllerObservable, toolbarController.selectedToolObservable(), behaviour::onChanged)
         .subscribe();
+
+        Observable.combineLatest(selectedPanelControllerObservable, toolbarController.measurementCreatedObservable(), behaviour::onChanged)
+        .subscribe();
     }
 
     private class Behaviour {
@@ -78,6 +86,12 @@ public class Controller {
         private Optional<Void> onChanged(PanelController selectedPanelController, Tool selectedTool) {
         	selectedTool.setSelectedPanelController(selectedPanelController);
         	selectedPanelController.setEventsReceiver(selectedTool);
+        	return Optional.empty();
+        }
+
+        private Optional<Void> onChanged(PanelController selectedPanelController, Measurement createdMeasurement) {
+        	selectedPanelController.addMeasurement(createdMeasurement);
+        	selectedPanelController.setEventsReceiver(createdMeasurement);
         	return Optional.empty();
         }
     }

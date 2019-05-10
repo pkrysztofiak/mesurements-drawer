@@ -6,6 +6,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import pl.pkrysztofiak.mesurementsdrawer.controller.panel.PanelController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
 
 public class ToolController {
 
@@ -30,10 +31,10 @@ public class ToolController {
 
     private void initSubscriptions() {
         selectedPanelControllerObservable.subscribe(behaviour::onSelectedPanelControllerChanged);
+    }
 
-        selectedToolObservable.switchMap(selectedTool ->
-            selectedPanelControllerObservable.doOnNext(selectedTool::setSelectedPanelController))
-        .subscribe();
+    public Observable<Measurement> measurementCreatedObservable() {
+    	return selectedToolObservable.switchMap(Tool::measurementCreatedObservable);
     }
 
     public void setSelectedPanelController(PanelController panelController) {

@@ -4,6 +4,7 @@ import io.reactivex.Observable;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.ToolController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class ToolbarController {
@@ -17,5 +18,9 @@ public class ToolbarController {
 
 	public Observable<Tool> selectedToolObservable() {
 		return toolController.selectedToolObservable();
+	}
+
+	public Observable<Measurement> measurementCreatedObservable() {
+		return toolController.measurementCreatedObservable();
 	}
 }
