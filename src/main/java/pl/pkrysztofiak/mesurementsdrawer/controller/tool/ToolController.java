@@ -21,8 +21,11 @@ public class ToolController {
 
     public ToolController(Model model) {
         this.model = model;
-        selectedToolProperty.set(new PolygonTool(model));
         initSubscriptions();
+    }
+
+    public void setSelectedTool(Tool tool) {
+    	selectedToolProperty.set(tool);
     }
 
     private void initSubscriptions() {

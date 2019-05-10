@@ -8,7 +8,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.pkrysztofiak.mesurementsdrawer.controller.panel.PanelController;
-import pl.pkrysztofiak.mesurementsdrawer.controller.tool.ToolController;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.view.View;
@@ -30,7 +29,7 @@ public class Controller {
 
     private final ToolbarController toolbarController;
 
-    private final ToolController toolController;
+//    private final ToolController toolController;
 
     public Controller(Model model, View view) {
         super();
@@ -41,9 +40,7 @@ public class Controller {
         view.setToolbarView(toolbarView);
 
         toolbarController = new ToolbarController(toolbarView, model);
-        toolController = new ToolController(model);
-
-
+//        toolController = new ToolController(model);
 
         initSubscriptions();
         view.show();
@@ -77,7 +74,8 @@ public class Controller {
             selectedPanelController.setSelected(true);
             Observable.fromIterable(panelsControllers).filter(panelController -> panelController.unequals(selectedPanelController)).subscribe(panelController -> panelController.setSelected(false));
 
-            toolController.setSelectedPanelController(selectedPanelController);
+            toolbarController.setSelectedPanelController(selectedPanelController);
+//            toolController.setSelectedPanelController(selectedPanelController);
         }
     }
 }

@@ -7,13 +7,14 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.ToolType;
 
 public class ToolbarView extends HBox {
 
 	private final ToggleGroup toolsToggleGroup = new ToggleGroup();
-	private final Observable<Toggle> toolToggleSelectedObservable = JavaFxObservable.valuesOf(toolsToggleGroup.selectedToggleProperty());
-	private final Observable<ToolType> toolSelectedObservable = toolToggleSelectedObservable.cast(ToolToggleButton.class).map(ToolToggleButton::getToolType);
+	private final Observable<Toggle> selectedToolToggleObservable = JavaFxObservable.valuesOf(toolsToggleGroup.selectedToggleProperty());
+	private final Observable<Tool> selectedToolObservable = selectedToolToggleObservable.cast(ToolToggleButton.class).map(ToolToggleButton::getToolType).map(ToolType::getTool);
 
 	private final ToolToggleButton polygonToolButton = new ToolToggleButton("Polygon", ToolType.POLYGON);
 	private final ToolToggleButton lineToolButton = new ToolToggleButton("Line", ToolType.LINE);
@@ -23,8 +24,8 @@ public class ToolbarView extends HBox {
 		toolsToggleGroup.getToggles().addAll(polygonToolButton, lineToolButton);
 	}
 
-	public Observable<ToolType> toolSelectedObservable() {
-		return toolSelectedObservable;
+	public Observable<Tool> selectedToolObservable() {
+		return selectedToolObservable;
 	}
 
 	private class ToolToggleButton extends ToggleButton {
