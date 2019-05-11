@@ -9,7 +9,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.controller.panel.PanelController;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
@@ -31,9 +30,6 @@ public class Controller {
 
     private final ObjectProperty<PanelController> selectedPanelControllerProperty = new SimpleObjectProperty<>();
     private final Observable<PanelController> selectedPanelControllerObservable = JavaFxObservable.valuesOf(selectedPanelControllerProperty);
-
-    private final ObjectProperty<EventsReceiver> eventsReceiverProperty = new SimpleObjectProperty<>();
-    private final Observable<EventsReceiver> eventsReceiverObservable = JavaFxObservable.valuesOf(eventsReceiverProperty);
 
     private final ToolbarController toolbarController;
 
@@ -71,6 +67,8 @@ public class Controller {
             panelController.mouseAnyObservable().map(mouseEvent -> panelController).takeUntil(panelControllerRemovedObservable.filter(panelController::equals))
             .subscribe(selectedPanelControllerProperty::set);
 
+            panelController.measurementAddedObservable().flatMap(Measurement::finishedObservale).subscribe(behaviour::onMeasurementFinished);
+
             Bindings.bindContentBidirectional(panelController.getMeasurements(), model.getMeasurements());
         }
 
@@ -93,6 +91,10 @@ public class Controller {
         	selectedPanelController.addMeasurement(createdMeasurement);
         	selectedPanelController.setEventsReceiver(createdMeasurement);
         	return Optional.empty();
+        }
+
+        private void onMeasurementFinished(Measurement measurement) {
+
         }
     }
 }

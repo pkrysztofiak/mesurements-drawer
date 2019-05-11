@@ -51,6 +51,8 @@ public class PolygonMeasurement extends Measurement {
         if (points.isEmpty()) {
             point.setSelected(true);
             points.add(point);
+
+            JavaFxObservable.valuesOf(point.previousPointProperty()).filter(Optional::isPresent).subscribe(previousPoint -> finishedPublishable.onNext(this));
         } else {
             points.stream().filter(Point::isSelected).findFirst().ifPresent(selectedPoint -> {
                 if (!selectedPoint.getNextPoint().isPresent()) {
