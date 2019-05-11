@@ -96,7 +96,7 @@ public class Controller {
         }
 
         private Optional<Void> onChanged(ImagePanelController selectedPanelController, Tool selectedTool) {
-        	selectedTool.setSelectedImagePanelController(selectedPanelController);
+//        	selectedTool.setSelectedImagePanelController(selectedPanelController);
         	selectedPanelController.setEventsReceiver(selectedTool);
         	return Optional.empty();
         }

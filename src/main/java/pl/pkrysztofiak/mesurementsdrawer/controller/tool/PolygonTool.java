@@ -1,7 +1,5 @@
 package pl.pkrysztofiak.mesurementsdrawer.controller.tool;
 
-import java.util.Optional;
-
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.PolygonDrawer;
@@ -12,7 +10,6 @@ public class PolygonTool extends Tool {
     private final Behaviour behaviour = new Behaviour();
     private final PolygonDrawer polygonDrawer = new PolygonDrawer();
 
-//    private final PublishSubject<PolygonMeasurement> polygonMeasurementCreatedPublishable = PublishSubject.create();
 
     public PolygonTool() {
         initSubscriptions();
@@ -32,31 +29,15 @@ public class PolygonTool extends Tool {
         behaviour.onMouseReleased(mouseEvent);
     }
 
-//    public Observable<PolygonMeasurement> polygonMeasurementCreatedObservable() {
-//    	return polygonMeasurementCreatedPublishable;
-//    }
-
     private class Behaviour {
 
         private void onMouseReleased(MouseEvent mouseEvent) {
             System.out.println("PolygonTool onMouseReleased");
             PolygonMeasurement polygonMeasurement = new PolygonMeasurement();
             measurementCreatedPubslishable.onNext(polygonMeasurement);
-
-//            polygonMeasurementCreatedPublishable.onNext(polygonMeasurement);
-
-//            Optional.ofNullable(selectedPanelController.get()).ifPresent(panelController -> {
-//                System.out.println("active panel controller present");
-//                PolygonMeasurement polygonMeasurement = new PolygonMeasurement();
-//                panelController.setEventsReceiver(polygonMeasurement);
-//                panelController.addMeasurement(polygonMeasurement);
-//            });
         }
 
         private void onMeasurementCreated(Measurement measurement) {
-        	System.out.println("onMeasurementCreated");
-        	Optional.ofNullable(selectedPanelController.get()).ifPresent(panelController -> panelController.addMeasurement(measurement));
-//            Optional.ofNullable(selectedImagePanelController.get()).ifPresent(panelController -> panelController.addMeasurement(measurement));
         }
     }
 
