@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
-import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanel;
+import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanelView;
 
 public class ImagePanelController {
 
@@ -25,35 +25,35 @@ public class ImagePanelController {
     private final ObjectProperty<EventsReceiver> eventsReceiverPropety = new SimpleObjectProperty<>();
     private final Observable<EventsReceiver> eventsReceiverObservable = JavaFxObservable.valuesOf(eventsReceiverPropety);
 
-    private final ImagePanel imagePanel;
+    private final ImagePanelView imagePanelView;
 
-    public ImagePanelController(ImagePanel imagePanel) {
+    public ImagePanelController(ImagePanelView imagePanelView) {
         super();
-        this.imagePanel = imagePanel;
+        this.imagePanelView = imagePanelView;
         initSubscriptions();
     }
 
     private void initSubscriptions() {
-        eventsReceiverObservable.switchMap(eventsReceiver -> imagePanel.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
+        eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
 
         measurementAddedObservable.flatMap(Measurement::finishedObservale).subscribe(behaviour::onMeasurementFinished);
     }
 
     public void setSelected(boolean value) {
-        imagePanel.setSelected(value);
+        imagePanelView.setSelected(value);
     }
 
     public void addMeasurement(Measurement measurement) {
         measurements.add(measurement);
-        imagePanel.getChildren().add(measurement);
+        imagePanelView.getChildren().add(measurement);
     }
 
     public Observable<MouseEvent> mouseReleasedObservable() {
-        return imagePanel.mouseReleasedObservable();
+        return imagePanelView.mouseReleasedObservable();
     }
 
     public Observable<MouseEvent> mouseAnyObservable() {
-        return imagePanel.mouseAnyObservable();
+        return imagePanelView.mouseAnyObservable();
     }
 
     public Observable<Measurement> measurementAddedObservable() {

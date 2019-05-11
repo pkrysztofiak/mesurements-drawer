@@ -6,7 +6,7 @@ import io.reactivex.subjects.PublishSubject;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
-public class ImagePanel extends StackPane {
+public class ImagePanelView extends StackPane {
 
     private final Behaviour behaviour = new Behaviour();
 
@@ -17,7 +17,7 @@ public class ImagePanel extends StackPane {
     private final PublishSubject<MouseEvent> mouseAnyPublishable = PublishSubject.create();
 
 
-    public ImagePanel() {
+    public ImagePanelView() {
         setStyle("-fx-background-color: gray; -fx-border-color: red;");
         initSubscriptions();
     }

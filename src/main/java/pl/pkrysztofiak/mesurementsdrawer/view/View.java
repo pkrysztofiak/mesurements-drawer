@@ -17,7 +17,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanel;
+import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanelView;
 import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class View {
@@ -27,9 +27,9 @@ public class View {
     private final GridPane panelsGridPane = new GridPane();
     private final BorderPane borderPane = new BorderPane(panelsGridPane);
 
-    private final ObservableList<ImagePanel> imagePanels = FXCollections.observableArrayList();
+    private final ObservableList<ImagePanelView> imagePanelViews = FXCollections.observableArrayList();
 
-    private final Observable<ImagePanel> panelAddedObservable = JavaFxObservable.additionsOf(imagePanels);
+    private final Observable<ImagePanelView> panelAddedObservable = JavaFxObservable.additionsOf(imagePanelViews);
 
     public View() {
     	VBox.setVgrow(panelsGridPane, Priority.ALWAYS);
@@ -40,7 +40,7 @@ public class View {
         int rows = 2;
         int columns = 2;
 
-        Bindings.bindContent(panelsGridPane.getChildren(), imagePanels);
+        Bindings.bindContent(panelsGridPane.getChildren(), imagePanelViews);
 
         for (int columnIndex = 0; columnIndex < columns; columnIndex++) {
             ColumnConstraints columnConstraints = new ColumnConstraints(100, 100, 10e6, Priority.ALWAYS, HPos.LEFT, true);
@@ -54,9 +54,9 @@ public class View {
 
         for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columns; columnIndex++) {
-                ImagePanel imagePanel = new ImagePanel();
-                GridPane.setConstraints(imagePanel, columnIndex, rowIndex);
-                imagePanels.add(imagePanel);
+                ImagePanelView imagePanelView = new ImagePanelView();
+                GridPane.setConstraints(imagePanelView, columnIndex, rowIndex);
+                imagePanelViews.add(imagePanelView);
             }
         }
 
@@ -72,7 +72,7 @@ public class View {
         stage.show();
     }
 
-    public Observable<ImagePanel> panelCreatedObservable() {
+    public Observable<ImagePanelView> panelCreatedObservable() {
         return panelAddedObservable;
     }
 
