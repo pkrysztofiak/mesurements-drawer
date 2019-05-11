@@ -17,7 +17,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import pl.pkrysztofiak.mesurementsdrawer.view.panel.Panel;
+import pl.pkrysztofiak.mesurementsdrawer.view.panel.ImagePanel;
 import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class View {
@@ -27,9 +27,9 @@ public class View {
     private final GridPane panelsGridPane = new GridPane();
     private final BorderPane borderPane = new BorderPane(panelsGridPane);
 
-    private final ObservableList<Panel> panels = FXCollections.observableArrayList();
+    private final ObservableList<ImagePanel> imagePanels = FXCollections.observableArrayList();
 
-    private final Observable<Panel> panelAddedObservable = JavaFxObservable.additionsOf(panels);
+    private final Observable<ImagePanel> panelAddedObservable = JavaFxObservable.additionsOf(imagePanels);
 
     public View() {
     	VBox.setVgrow(panelsGridPane, Priority.ALWAYS);
@@ -40,7 +40,7 @@ public class View {
         int rows = 2;
         int columns = 2;
 
-        Bindings.bindContent(panelsGridPane.getChildren(), panels);
+        Bindings.bindContent(panelsGridPane.getChildren(), imagePanels);
 
         for (int columnIndex = 0; columnIndex < columns; columnIndex++) {
             ColumnConstraints columnConstraints = new ColumnConstraints(100, 100, 10e6, Priority.ALWAYS, HPos.LEFT, true);
@@ -54,9 +54,9 @@ public class View {
 
         for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columns; columnIndex++) {
-                Panel panel = new Panel();
-                GridPane.setConstraints(panel, columnIndex, rowIndex);
-                panels.add(panel);
+                ImagePanel imagePanel = new ImagePanel();
+                GridPane.setConstraints(imagePanel, columnIndex, rowIndex);
+                imagePanels.add(imagePanel);
             }
         }
 
@@ -72,7 +72,7 @@ public class View {
         stage.show();
     }
 
-    public Observable<Panel> panelCreatedObservable() {
+    public Observable<ImagePanel> panelCreatedObservable() {
         return panelAddedObservable;
     }
 

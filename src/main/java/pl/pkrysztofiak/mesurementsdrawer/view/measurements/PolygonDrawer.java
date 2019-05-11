@@ -8,7 +8,7 @@ import io.reactivex.subjects.PublishSubject;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.MouseEvent;
-import pl.pkrysztofiak.mesurementsdrawer.controller.panel.PanelController;
+import pl.pkrysztofiak.mesurementsdrawer.controller.panel.ImagePanelController;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurement;
 
 public class PolygonDrawer {
@@ -18,7 +18,7 @@ public class PolygonDrawer {
     private final ObjectProperty<PolygonMeasurement> newMeasurementProperty = new SimpleObjectProperty<>();
     private final Observable<PolygonMeasurement> newMeasurementObservable = JavaFxObservable.valuesOf(newMeasurementProperty);
     
-    private final ObjectProperty<PanelController> selectedPanelController = new SimpleObjectProperty<>();
+    private final ObjectProperty<ImagePanelController> selectedPanelController = new SimpleObjectProperty<>();
     private final PublishSubject<MouseEvent> mouseReleasedPublishable = PublishSubject.create();
     
     public PolygonDrawer() {
@@ -34,7 +34,7 @@ public class PolygonDrawer {
         return newMeasurementObservable;
     }
     
-    public void setSelectedPanelController(PanelController selectedPanelController) {
+    public void setSelectedPanelController(ImagePanelController selectedPanelController) {
         this.selectedPanelController.set(selectedPanelController);
     }
     
