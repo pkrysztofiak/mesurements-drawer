@@ -22,4 +22,8 @@ public class ToolbarController {
 	public Observable<Measurement> measurementCreatedObservable() {
 		return toolController.measurementCreatedObservable();
 	}
+
+	public Tool getSelectedTool() {
+		return toolController.getSelectedTool();
+	}
 }

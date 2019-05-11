@@ -23,7 +23,11 @@ public class ToolController {
     	return selectedToolObservable.switchMap(Tool::measurementCreatedObservable);
     }
 
-    public final Observable<Tool> selectedToolObservable() {
+    public Tool getSelectedTool() {
+    	return selectedToolProperty.get();
+    }
+
+    public Observable<Tool> selectedToolObservable() {
         return selectedToolObservable;
     }
 }

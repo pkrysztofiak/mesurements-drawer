@@ -52,14 +52,19 @@ public class PanelController {
 	private class Behaviour {
 
 		private void onSelectedToolChanged(Tool tool) {
-//			tool.setSelectedPanelController(PanelController.this);
 			imagePanelController.setEventsReceiver(tool);
 		}
 
 		private void onMeasurementCreated(Measurement measurement) {
 			imagePanelController.addMeasurement(measurement);
 			imagePanelController.setEventsReceiver(measurement);
+
+			//TODO dopisać takeUntil na usunięcie (dodatkowy proprties)
+			measurement.finishedObservale().subscribe(this::onMeasurementFinished);
 		}
 
+		private void onMeasurementFinished(Measurement measurement) {
+			imagePanelController.setEventsReceiver(toolbarController.getSelectedTool());
+		}
 	}
 }
