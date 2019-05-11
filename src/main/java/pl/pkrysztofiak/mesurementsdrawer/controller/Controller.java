@@ -9,7 +9,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import pl.pkrysztofiak.mesurementsdrawer.controller.panel.ImagePanelController;
+import pl.pkrysztofiak.mesurementsdrawer.controller.panel.image.ImagePanelController;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;

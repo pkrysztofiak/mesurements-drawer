@@ -8,7 +8,7 @@ import io.reactivex.subjects.PublishSubject;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.MouseEvent;
-import pl.pkrysztofiak.mesurementsdrawer.controller.panel.ImagePanelController;
+import pl.pkrysztofiak.mesurementsdrawer.controller.panel.image.ImagePanelController;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurement;
 
 public class PolygonDrawer {

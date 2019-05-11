@@ -12,4 +12,6 @@ public class PanelView extends VBox {
 
 	private final ObjectProperty<Optional<ToolbarView>> toolbarViewOptionalProperty = new SimpleObjectProperty<>(Optional.empty());
 	private final ObjectProperty<Optional<ImagePanelView>> imagePanelViewOptionalProperty = new SimpleObjectProperty<>(Optional.empty());
+
+
 }
