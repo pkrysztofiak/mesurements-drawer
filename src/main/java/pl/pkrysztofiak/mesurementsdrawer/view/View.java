@@ -17,6 +17,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import pl.pkrysztofiak.mesurementsdrawer.view.panel.PanelView;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanelView;
 import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
@@ -26,6 +27,9 @@ public class View {
 
     private final GridPane panelsGridPane = new GridPane();
     private final BorderPane borderPane = new BorderPane(panelsGridPane);
+
+    private final ObservableList<PanelView> panelsViews = FXCollections.observableArrayList();
+    private final Observable<PanelView> panelViewAddedObservable = JavaFxObservable.additionsOf(panelsViews);
 
     private final ObservableList<ImagePanelView> imagePanelViews = FXCollections.observableArrayList();
 
@@ -40,7 +44,8 @@ public class View {
         int rows = 2;
         int columns = 2;
 
-        Bindings.bindContent(panelsGridPane.getChildren(), imagePanelViews);
+//        Bindings.bindContent(panelsGridPane.getChildren(), imagePanelViews);
+        Bindings.bindContent(panelsGridPane.getChildren(), panelsViews);
 
         for (int columnIndex = 0; columnIndex < columns; columnIndex++) {
             ColumnConstraints columnConstraints = new ColumnConstraints(100, 100, 10e6, Priority.ALWAYS, HPos.LEFT, true);
@@ -54,11 +59,16 @@ public class View {
 
         for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
             for (int columnIndex = 0; columnIndex < columns; columnIndex++) {
-                ImagePanelView imagePanelView = new ImagePanelView();
-                GridPane.setConstraints(imagePanelView, columnIndex, rowIndex);
-                imagePanelViews.add(imagePanelView);
+            	PanelView panelView = new PanelView();
+            	GridPane.setConstraints(panelView, columnIndex, rowIndex);
+            	panelsViews.add(panelView);
+
+//                ImagePanelView imagePanelView = new ImagePanelView();
+//                GridPane.setConstraints(imagePanelView, columnIndex, rowIndex);
+//                imagePanelViews.add(imagePanelView);
             }
         }
+
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
@@ -70,6 +80,10 @@ public class View {
         stage.setHeight(screenBounds.getHeight());
         stage.setMaximized(true);
         stage.show();
+    }
+
+    public Observable<PanelView> panelViewAddedObservable() {
+    	return panelViewAddedObservable;
     }
 
     public Observable<ImagePanelView> panelCreatedObservable() {

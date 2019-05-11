@@ -54,7 +54,9 @@ public class PolygonTool extends Tool {
         }
 
         private void onMeasurementCreated(Measurement measurement) {
-            Optional.ofNullable(selectedPanelController.get()).ifPresent(panelController -> panelController.addMeasurement(measurement));
+        	System.out.println("onMeasurementCreated");
+        	Optional.ofNullable(selectedPanelController.get()).ifPresent(panelController -> panelController.addMeasurement(measurement));
+//            Optional.ofNullable(selectedImagePanelController.get()).ifPresent(panelController -> panelController.addMeasurement(measurement));
         }
     }
 

@@ -28,7 +28,6 @@ public class ImagePanelController {
     private final ImagePanelView imagePanelView;
 
     public ImagePanelController(ImagePanelView imagePanelView) {
-        super();
         this.imagePanelView = imagePanelView;
         initSubscriptions();
     }
@@ -44,6 +43,7 @@ public class ImagePanelController {
     }
 
     public void addMeasurement(Measurement measurement) {
+    	System.out.println("add measurement");
         measurements.add(measurement);
         imagePanelView.getChildren().add(measurement);
     }
