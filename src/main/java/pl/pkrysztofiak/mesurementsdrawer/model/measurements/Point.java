@@ -15,8 +15,11 @@ import javafx.beans.property.SimpleObjectProperty;
 public class Point {
 
     private final ObjectProperty<Optional<Point>> previousPointProperty = new SimpleObjectProperty<>(Optional.empty());
-    private final ObjectProperty<Optional<Point>> nextPointProperty = new SimpleObjectProperty<>(Optional.empty());
+    private final Observable<Optional<Point>> previousePointObservable = JavaFxObservable.valuesOf(previousPointProperty);
     private final Observable<Change<Optional<Point>>> previousPointChangedObservable = JavaFxObservable.changesOf(previousPointProperty);
+
+    private final ObjectProperty<Optional<Point>> nextPointProperty = new SimpleObjectProperty<>(Optional.empty());
+    private final Observable<Optional<Point>> nextPointObservable = JavaFxObservable.valuesOf(nextPointProperty);
     private final Observable<Change<Optional<Point>>> nextPointChangedObservable = JavaFxObservable.changesOf(nextPointProperty);
 
     private DoubleProperty layoutXProperty = new SimpleDoubleProperty();

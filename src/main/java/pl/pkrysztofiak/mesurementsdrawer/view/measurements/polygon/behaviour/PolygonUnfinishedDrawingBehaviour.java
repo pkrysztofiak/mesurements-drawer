@@ -47,12 +47,14 @@ public class PolygonUnfinishedDrawingBehaviour extends PolygonDrawingBehaviour {
 
         		private final Observable<MouseEvent> pointClicked = JavaFxObservable.eventsOf(getNode(), MouseEvent.MOUSE_PRESSED);
         		private final Observable<Change<Optional<Point>>> nextPointChangedObservable = JavaFxObservable.changesOf(point.nextPointProperty());
+        		private final Observable<Optional<Point>> nextPointObservable = JavaFxObservable.valuesOf(point.nextPointProperty());
         		private final Observable<Point> pointRemovedObservable = pointRemovedObservable().filter(point::equals).take(1);
 
         		{
         			pointsSizeObservable.subscribe(pointBehaviour::onPointsSizeChanged);
         			pointClicked.subscribe(pointBehaviour::onMouseClicked);
-        			nextPointChangedObservable.subscribe(behaviour::onNextPointChanged);
+//        			nextPointChangedObservable.subscribe(behaviour::onNextPointChanged);
+        			nextPointObservable.subscribe(behaviour::onNextPointChange);
         		}
 
         		private void setOnMouseClicked(OnMouseClicked onMouseClicked) {
@@ -80,6 +82,23 @@ public class PolygonUnfinishedDrawingBehaviour extends PolygonDrawingBehaviour {
             circle.layoutXProperty().bindBidirectional(point.layoutXProperty());
             circle.layoutYProperty().bindBidirectional(point.layoutYProperty());
             children.add(circle);
+        }
+
+        private void onNextPointChange(Optional<Point> optionalPoint) {
+        	optionalPoint.ifPresent(point -> {
+        		point.getPreviousPoint().ifPresent(previousPoint -> {
+        			Line line = new Line();
+        			line.setStroke(Color.CYAN);
+
+        			line.startXProperty().bindBidirectional(previousPoint.layoutXProperty());
+        			line.startYProperty().bindBidirectional(previousPoint.layoutYProperty());
+
+        			line.endXProperty().bindBidirectional(previousPoint.getNextPoint().get().layoutXProperty());
+        			line.endYProperty().bindBidirectional(previousPoint.getNextPoint().get().layoutYProperty());
+
+        			children.add(0, line);
+        		});
+        	});
         }
 
         private void onNextPointChanged(Change<Optional<Point>> change) {
