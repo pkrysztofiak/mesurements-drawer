@@ -3,6 +3,7 @@ package pl.pkrysztofiak.mesurementsdrawer.controller.panel;
 import pl.pkrysztofiak.mesurementsdrawer.controller.panel.image.ImagePanelController;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
+import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.PanelView;
 
@@ -10,16 +11,19 @@ public class PanelController {
 
 	private final Behaviour behaviour = new Behaviour();
 
+	private final Model model;
+
 	private final PanelView panelView;
 
 	private final ToolbarController toolbarController;
 	private final ImagePanelController imagePanelController;
 
-	public PanelController(PanelView panelView) {
+	public PanelController(PanelView panelView, Model model) {
 		this.panelView = panelView;
+		this.model = model;
 
-		toolbarController = new ToolbarController(panelView.getToolbarView());
-		imagePanelController = new ImagePanelController(panelView.getImagePanelView());
+		toolbarController = new ToolbarController(panelView.getToolbarView(), model);
+		imagePanelController = new ImagePanelController(panelView.getImagePanelView(), model);
 
 		initSubscriptions();
 	}
@@ -65,6 +69,7 @@ public class PanelController {
 
 		private void onMeasurementFinished(MeasurementView measurementView) {
 			imagePanelController.setEventsReceiver(toolbarController.getSelectedTool());
+			model.addMeasurement(measurementView.getMeasurement());
 		}
 	}
 }

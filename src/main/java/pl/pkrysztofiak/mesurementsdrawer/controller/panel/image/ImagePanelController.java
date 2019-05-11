@@ -2,13 +2,17 @@ package pl.pkrysztofiak.mesurementsdrawer.controller.panel.image;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
+import pl.pkrysztofiak.mesurementsdrawer.model.Model;
+import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanelView;
 
 public class ImagePanelController {
@@ -18,24 +22,33 @@ public class ImagePanelController {
 
     private final Behaviour behaviour = new Behaviour();
 
-    private final ObservableList<MeasurementView> measurementViews = FXCollections.observableArrayList();
-    private final Observable<MeasurementView> measurementAddedObservable = JavaFxObservable.additionsOf(measurementViews);
-    private final Observable<MeasurementView> measurementRemovedObservable = JavaFxObservable.removalsOf(measurementViews);
+    private final ImagePanelView imagePanelView;
+    private final Model model;
+
+    //TODO do klasy wewnętrznej, żeby nie można było manipulować
+    private final ObservableList<Measurement> measurements = FXCollections.observableArrayList();
+    private final Observable<Measurement> measurementAddedObservable = JavaFxObservable.additionsOf(measurements);
+
+    private final ObservableList<MeasurementView> measurementsViews = FXCollections.observableArrayList();
+    private final Observable<MeasurementView> measurementViewAddedObservable = JavaFxObservable.additionsOf(measurementsViews);
+    private final Observable<MeasurementView> measurementViewRemovedObservable = JavaFxObservable.removalsOf(measurementsViews);
 
     private final ObjectProperty<EventsReceiver> eventsReceiverPropety = new SimpleObjectProperty<>();
     private final Observable<EventsReceiver> eventsReceiverObservable = JavaFxObservable.valuesOf(eventsReceiverPropety);
 
-    private final ImagePanelView imagePanelView;
 
-    public ImagePanelController(ImagePanelView imagePanelView) {
+    public ImagePanelController(ImagePanelView imagePanelView, Model model) {
         this.imagePanelView = imagePanelView;
+        this.model = model;
         initSubscriptions();
+
+        Bindings.bindContentBidirectional(measurements, model.getMeasurements());
     }
 
     private void initSubscriptions() {
         eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
 
-        measurementAddedObservable.flatMap(MeasurementView::finishedObservale).subscribe(behaviour::onMeasurementFinished);
+        measurementAddedObservable.subscribe(behaviour::onMeasurementAdded);
     }
 
     public void setSelected(boolean value) {
@@ -43,8 +56,7 @@ public class ImagePanelController {
     }
 
     public void addMeasurement(MeasurementView measurementView) {
-    	System.out.println("add measurement");
-        measurementViews.add(measurementView);
+        measurementsViews.add(measurementView);
         imagePanelView.getChildren().add(measurementView);
     }
 
@@ -57,7 +69,7 @@ public class ImagePanelController {
     }
 
     public Observable<MeasurementView> measurementAddedObservable() {
-    	return measurementAddedObservable;
+    	return measurementViewAddedObservable;
     }
 
     public boolean equals(ImagePanelController imagePanelController) {
@@ -69,7 +81,7 @@ public class ImagePanelController {
     }
 
     public ObservableList<MeasurementView> getMeasurements() {
-        return measurementViews;
+        return measurementsViews;
     }
 
     public int getId() {
@@ -82,8 +94,25 @@ public class ImagePanelController {
 
     private class Behaviour {
 
-    	private void onMeasurementFinished(MeasurementView measurementView) {
+    	private void onMeasurementAdded(Measurement measurement) {
+    		if (!measurementExists(measurement)) {
+    			switch (measurement.getType()) {
+					case POLYGON :
+						PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView(measurement);
+						addMeasurement(polygonMeasurementView);
+						break;
+					case LINE :
 
+						break;
+					default :
+						break;
+				}
+    		}
     	}
+
+    	private boolean measurementExists(Measurement measurement) {
+    		return measurementsViews.stream().map(MeasurementView::getMeasurement).map(Measurement::getId).anyMatch(measurement.getId()::equals);
+    	}
+
     }
 }

@@ -41,7 +41,7 @@ public class Controller {
     private void initSubscriptions() {
     	selectedPanelControllerObservable.subscribe(behaviour::onSelectedPanelControllerChanged);
     	panelControllerAddedObservable.subscribe(behaviour::onPanelControllerAdded);
-    	view.panelViewAddedObservable().map(PanelController::new).subscribe(panelsControllers::add);
+    	view.panelViewAddedObservable().map(panelView -> new PanelController(panelView, model)).subscribe(panelsControllers::add);
     }
 
     private class Behaviour {

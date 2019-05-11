@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
+import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.MeasurementType;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
@@ -36,6 +37,12 @@ public class PolygonMeasurementView extends MeasurementView {
         drawingBehaviourProperty.set(Optional.of(new PolygonUnfinishedDrawingBehaviour()));
     }
 
+    public PolygonMeasurementView(Measurement polygonMeasurement) {
+    	super(polygonMeasurement);
+    	initSubscriptions();
+    	drawingBehaviourProperty.set(Optional.of(new PolygonUnfinishedDrawingBehaviour()));
+    }
+
     private void initSubscriptions() {
         pointAddedObservable.subscribe(behaviour::onPointAdded);
         drawingBehaviourChangeObservablbe.subscribe(behaviour::onDrawingBehaviourChanged);
@@ -50,6 +57,8 @@ public class PolygonMeasurementView extends MeasurementView {
 
     @Override
     public void onMouseReleased(MouseEvent mouseEvent) {
+//    	points.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
+
         Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
         if (points.isEmpty()) {
             point.setSelected(true);

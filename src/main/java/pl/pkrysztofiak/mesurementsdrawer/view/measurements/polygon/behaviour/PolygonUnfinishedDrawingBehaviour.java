@@ -39,7 +39,6 @@ public class PolygonUnfinishedDrawingBehaviour extends PolygonDrawingBehaviour {
     private class Behaviour {
 
         private void onPointAdded(Point point) {
-
         	PolygonPointCircle polygonPointCircle = new PolygonPointCircle(new Circle(8, Color.BLUEVIOLET)) {
 
         		private final PointBehaviour pointBehaviour = new PointBehaviour();
