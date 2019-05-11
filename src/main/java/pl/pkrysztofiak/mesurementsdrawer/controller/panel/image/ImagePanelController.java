@@ -8,7 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanelView;
 
 public class ImagePanelController {
@@ -18,9 +18,9 @@ public class ImagePanelController {
 
     private final Behaviour behaviour = new Behaviour();
 
-    private final ObservableList<Measurement> measurements = FXCollections.observableArrayList();
-    private final Observable<Measurement> measurementAddedObservable = JavaFxObservable.additionsOf(measurements);
-    private final Observable<Measurement> measurementRemovedObservable = JavaFxObservable.removalsOf(measurements);
+    private final ObservableList<MeasurementView> measurementViews = FXCollections.observableArrayList();
+    private final Observable<MeasurementView> measurementAddedObservable = JavaFxObservable.additionsOf(measurementViews);
+    private final Observable<MeasurementView> measurementRemovedObservable = JavaFxObservable.removalsOf(measurementViews);
 
     private final ObjectProperty<EventsReceiver> eventsReceiverPropety = new SimpleObjectProperty<>();
     private final Observable<EventsReceiver> eventsReceiverObservable = JavaFxObservable.valuesOf(eventsReceiverPropety);
@@ -35,17 +35,17 @@ public class ImagePanelController {
     private void initSubscriptions() {
         eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
 
-        measurementAddedObservable.flatMap(Measurement::finishedObservale).subscribe(behaviour::onMeasurementFinished);
+        measurementAddedObservable.flatMap(MeasurementView::finishedObservale).subscribe(behaviour::onMeasurementFinished);
     }
 
     public void setSelected(boolean value) {
         imagePanelView.setSelected(value);
     }
 
-    public void addMeasurement(Measurement measurement) {
+    public void addMeasurement(MeasurementView measurementView) {
     	System.out.println("add measurement");
-        measurements.add(measurement);
-        imagePanelView.getChildren().add(measurement);
+        measurementViews.add(measurementView);
+        imagePanelView.getChildren().add(measurementView);
     }
 
     public Observable<MouseEvent> mouseReleasedObservable() {
@@ -56,7 +56,7 @@ public class ImagePanelController {
         return imagePanelView.mouseAnyObservable();
     }
 
-    public Observable<Measurement> measurementAddedObservable() {
+    public Observable<MeasurementView> measurementAddedObservable() {
     	return measurementAddedObservable;
     }
 
@@ -68,8 +68,8 @@ public class ImagePanelController {
         return this != imagePanelController;
     }
 
-    public ObservableList<Measurement> getMeasurements() {
-        return measurements;
+    public ObservableList<MeasurementView> getMeasurements() {
+        return measurementViews;
     }
 
     public int getId() {
@@ -82,7 +82,7 @@ public class ImagePanelController {
 
     private class Behaviour {
 
-    	private void onMeasurementFinished(Measurement measurement) {
+    	private void onMeasurementFinished(MeasurementView measurementView) {
 
     	}
     }

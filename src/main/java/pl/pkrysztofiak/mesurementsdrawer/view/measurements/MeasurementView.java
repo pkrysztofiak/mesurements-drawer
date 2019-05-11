@@ -6,17 +6,17 @@ import javafx.scene.layout.Pane;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.MeasurementType;
 
-public abstract class Measurement extends Pane implements EventsReceiver {
+public abstract class MeasurementView extends Pane implements EventsReceiver {
 
-	protected PublishSubject<Measurement> finishedPublishable = PublishSubject.create();
+	protected PublishSubject<MeasurementView> finishedPublishable = PublishSubject.create();
 
     public abstract MeasurementType getType();
 
-    public Measurement() {
+    public MeasurementView() {
         setPickOnBounds(false);
     }
 
-    public Observable<Measurement> finishedObservale() {
+    public Observable<MeasurementView> finishedObservale() {
     	return finishedPublishable.take(1);
     }
 }

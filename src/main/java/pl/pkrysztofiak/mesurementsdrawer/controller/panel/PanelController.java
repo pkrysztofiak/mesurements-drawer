@@ -3,7 +3,7 @@ package pl.pkrysztofiak.mesurementsdrawer.controller.panel;
 import pl.pkrysztofiak.mesurementsdrawer.controller.panel.image.ImagePanelController;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.PanelView;
 
 public class PanelController {
@@ -24,8 +24,8 @@ public class PanelController {
 		initSubscriptions();
 	}
 
-	public void addMeasurement(Measurement measurement) {
-		imagePanelController.addMeasurement(measurement);
+	public void addMeasurement(MeasurementView measurementView) {
+		imagePanelController.addMeasurement(measurementView);
 	}
 
 	private void initSubscriptions() {
@@ -55,15 +55,15 @@ public class PanelController {
 			imagePanelController.setEventsReceiver(tool);
 		}
 
-		private void onMeasurementCreated(Measurement measurement) {
-			imagePanelController.addMeasurement(measurement);
-			imagePanelController.setEventsReceiver(measurement);
+		private void onMeasurementCreated(MeasurementView measurementView) {
+			imagePanelController.addMeasurement(measurementView);
+			imagePanelController.setEventsReceiver(measurementView);
 
 			//TODO dopisać takeUntil na usunięcie (dodatkowy proprties)
-			measurement.finishedObservale().subscribe(this::onMeasurementFinished);
+			measurementView.finishedObservale().subscribe(this::onMeasurementFinished);
 		}
 
-		private void onMeasurementFinished(Measurement measurement) {
+		private void onMeasurementFinished(MeasurementView measurementView) {
 			imagePanelController.setEventsReceiver(toolbarController.getSelectedTool());
 		}
 	}

@@ -14,11 +14,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.MeasurementType;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.behaviour.PolygonDrawingBehaviour;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.behaviour.PolygonUnfinishedDrawingBehaviour;
 
-public class PolygonMeasurement extends Measurement {
+public class PolygonMeasurementView extends MeasurementView {
 
     private Behaviour behaviour = new Behaviour();
 
@@ -29,7 +29,7 @@ public class PolygonMeasurement extends Measurement {
     private final ObjectProperty<Optional<PolygonDrawingBehaviour>> drawingBehaviourProperty = new SimpleObjectProperty<>(Optional.empty());
     private final Observable<Change<Optional<PolygonDrawingBehaviour>>> drawingBehaviourChangeObservablbe = JavaFxObservable.changesOf(drawingBehaviourProperty);
 
-    public PolygonMeasurement() {
+    public PolygonMeasurementView() {
         initSubscriptions();
         drawingBehaviourProperty.set(Optional.of(new PolygonUnfinishedDrawingBehaviour()));
     }

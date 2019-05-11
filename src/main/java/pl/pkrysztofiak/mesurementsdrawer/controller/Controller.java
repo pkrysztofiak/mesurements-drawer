@@ -15,7 +15,7 @@ import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.view.View;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class Controller {
@@ -81,7 +81,7 @@ public class Controller {
             imagePanelController.mouseAnyObservable().map(mouseEvent -> imagePanelController).takeUntil(imagePanelControllerRemovedObservable.filter(imagePanelController::equals))
             .subscribe(selectedImagePanelControllerProperty::set);
 
-            imagePanelController.measurementAddedObservable().flatMap(Measurement::finishedObservale).subscribe(behaviour::onMeasurementFinished);
+            imagePanelController.measurementAddedObservable().flatMap(MeasurementView::finishedObservale).subscribe(behaviour::onMeasurementFinished);
 
 //            Bindings.bindContentBidirectional(imagePanelController.getMeasurements(), model.getMeasurements());
         }
@@ -101,13 +101,13 @@ public class Controller {
         	return Optional.empty();
         }
 
-        private Optional<Void> onChanged(ImagePanelController selectedPanelController, Measurement createdMeasurement) {
+        private Optional<Void> onChanged(ImagePanelController selectedPanelController, MeasurementView createdMeasurement) {
         	selectedPanelController.addMeasurement(createdMeasurement);
         	selectedPanelController.setEventsReceiver(createdMeasurement);
         	return Optional.empty();
         }
 
-        private void onMeasurementFinished(Measurement measurement) {
+        private void onMeasurementFinished(MeasurementView measurementView) {
 
         }
 

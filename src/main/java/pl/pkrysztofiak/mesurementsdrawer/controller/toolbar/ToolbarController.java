@@ -3,7 +3,7 @@ package pl.pkrysztofiak.mesurementsdrawer.controller.toolbar;
 import io.reactivex.Observable;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.ToolController;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class ToolbarController {
@@ -19,7 +19,7 @@ public class ToolbarController {
 		return toolController.selectedToolObservable();
 	}
 
-	public Observable<Measurement> measurementCreatedObservable() {
+	public Observable<MeasurementView> measurementCreatedObservable() {
 		return toolController.measurementCreatedObservable();
 	}
 
