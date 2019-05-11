@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.Measurement;
-import pl.pkrysztofiak.mesurementsdrawer.view.panel.ImagePanel;
+import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanel;
 
 public class ImagePanelController {
 

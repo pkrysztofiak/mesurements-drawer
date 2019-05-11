@@ -17,7 +17,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import pl.pkrysztofiak.mesurementsdrawer.view.panel.ImagePanel;
+import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanel;
 import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class View {

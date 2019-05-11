@@ -1,4 +1,4 @@
-package pl.pkrysztofiak.mesurementsdrawer.view.panel;
+package pl.pkrysztofiak.mesurementsdrawer.view.panel.image;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
