@@ -32,9 +32,6 @@ public class PolygonMeasurement extends Measurement {
     public PolygonMeasurement() {
         initSubscriptions();
         drawingBehaviourProperty.set(Optional.of(new PolygonUnfinishedDrawingBehaviour()));
-
-        JavaFxObservable.emitOnChanged(getChildren())
-        .subscribe(children -> System.out.println("PolygonMeasurement.children=" + children));
     }
 
     private void initSubscriptions() {

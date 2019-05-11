@@ -40,7 +40,6 @@ public class PolygonUnfinishedDrawingBehaviour extends PolygonDrawingBehaviour {
 
         private void onPointAdded(Point point) {
 
-        	System.out.println("PolygonUnfinishedDrawingBehaviour.onPointAdded()");
         	PolygonPointCircle polygonPointCircle = new PolygonPointCircle(new Circle(8, Color.BLUEVIOLET)) {
 
         		private final PointBehaviour pointBehaviour = new PointBehaviour();
@@ -82,8 +81,6 @@ public class PolygonUnfinishedDrawingBehaviour extends PolygonDrawingBehaviour {
             circle.layoutXProperty().bindBidirectional(point.layoutXProperty());
             circle.layoutYProperty().bindBidirectional(point.layoutYProperty());
             children.add(circle);
-            System.out.println("childeren=" + children);
-
         }
 
         private void onNextPointChanged(Change<Optional<Point>> change) {
