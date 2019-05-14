@@ -28,10 +28,6 @@ public abstract class MeasurementView extends Pane implements EventsReceiver {
     	return finishedPublishable.take(1);
     }
 
-    public PublishSubject<MeasurementView> finishedPublishable() {
-    	return finishedPublishable;
-    }
-
     public Measurement getMeasurement() {
     	return measurementProperty.get();
     }

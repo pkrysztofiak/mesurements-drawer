@@ -4,7 +4,7 @@ import pl.pkrysztofiak.mesurementsdrawer.controller.panel.image.ImagePanelContro
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.toolbar.ToolbarController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
+import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.PanelView;
 
 public class PanelController {
@@ -28,14 +28,19 @@ public class PanelController {
 		initSubscriptions();
 	}
 
-	public void addMeasurement(MeasurementView measurementView) {
-		imagePanelController.addMeasurement(measurementView);
-	}
+//	public void addMeasurement(MeasurementView measurementView) {
+//		imagePanelController.addMeasurement(measurementView);
+//	}
 
 	private void initSubscriptions() {
 		toolbarController.selectedToolObservable().subscribe(behaviour::onSelectedToolChanged);
-		toolbarController.newMeasurementCreatedObservable().subscribe(behaviour::onNewMeasurementCreated);
-		toolbarController.newMeasurementCreatedObservable().subscribe(imagePanelController::onNewMeasurementCreated);
+//		toolbarController.newMeasurementViewCreatedObservable().subscribe(behaviour::onNewMeasurementViewCreated);
+//		toolbarController.newMeasurementViewCreatedObservable().subscribe(imagePanelController::onNewMeasurementCreated);
+
+		//new
+		toolbarController.newMeasurementCreatedObservable().subscribe(imagePanelController::addMeasurement);
+		imagePanelController.measurementFinishedObservable().subscribe(behaviour::onMeasurementFinished);
+
 	}
 
 	public ImagePanelController getImagePanelController() {
@@ -60,13 +65,19 @@ public class PanelController {
 			imagePanelController.setEventsReceiver(tool);
 		}
 
-		private void onNewMeasurementCreated(MeasurementView measurementView) {
-			measurementView.finishedObservable().subscribe(this::onMeasurementFinished);
+//		private void onNewMeasurementViewCreated(MeasurementView measurementView) {
+//			measurementView.finishedObservable().subscribe(this::onMeasurementFinished);
+//		}
+
+		private void onMeasurementFinished(Measurement measurement) {
+			System.out.println("Measurement finished!");
+			imagePanelController.setEventsReceiver(toolbarController.getSelectedTool());
+			model.addMeasurement(measurement);
 		}
 
-		private void onMeasurementFinished(MeasurementView measurementView) {
-			imagePanelController.setEventsReceiver(toolbarController.getSelectedTool());
-			model.addMeasurement(measurementView.getMeasurement());
-		}
+//		private void onMeasurementFinished(MeasurementView measurementView) {
+//			imagePanelController.setEventsReceiver(toolbarController.getSelectedTool());
+//			model.addMeasurement(measurementView.getMeasurement());
+//		}
 	}
 }

@@ -5,6 +5,7 @@ import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
+import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 
 public class ToolController {
@@ -21,8 +22,12 @@ public class ToolController {
     	selectedToolProperty.set(tool);
     }
 
-    public Observable<MeasurementView> newMeasurementCreatedObservable() {
-    	return selectedToolObservable.switchMap(Tool::newMeasurementCreatedObservable);
+    public Observable<MeasurementView> newMeasurementViewCreatedObservable() {
+    	return selectedToolObservable.switchMap(Tool::newMeasurementViewCreatedObservable);
+    }
+
+    public Observable<Measurement> newMeasurementCreatedObservable() {
+    	return selectedToolObservable.switchMap(Tool::newMeasurementCreatedPublishable);
     }
 
     public Tool getSelectedTool() {

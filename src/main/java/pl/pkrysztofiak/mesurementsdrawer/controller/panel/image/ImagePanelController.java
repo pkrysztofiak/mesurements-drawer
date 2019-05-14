@@ -46,21 +46,25 @@ public class ImagePanelController {
 
     private void initSubscriptions() {
         eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
-        measurementAddedObservable.subscribe(behaviour::onMeasurementAdded);
+        measurementAddedObservable.subscribe(behaviour::addMeasurement);
     }
 
-    public void onNewMeasurementCreated(MeasurementView measurementView) {
-    	behaviour.onNewMeasurementCreated(measurementView);
+    public void addMeasurement(Measurement measurement) {
+    	behaviour.addMeasurement(measurement);
     }
+
+//    public void onNewMeasurementCreated(MeasurementView measurementView) {
+//    	behaviour.onNewMeasurementCreated(measurementView);
+//    }
 
     public void setSelected(boolean value) {
         imagePanelView.setSelected(value);
     }
 
-    public void addMeasurement(MeasurementView measurementView) {
-        measurementsViews.add(measurementView);
-        imagePanelView.getChildren().add(measurementView);
-    }
+//    public void addMeasurement(MeasurementView measurementView) {
+//        measurementsViews.add(measurementView);
+//        imagePanelView.getChildren().add(measurementView);
+//    }
 
     public Observable<MouseEvent> mouseReleasedObservable() {
         return imagePanelView.mouseReleasedObservable();
@@ -94,20 +98,29 @@ public class ImagePanelController {
         eventsReceiverPropety.set(eventsReceiver);
     }
 
+    public Observable<Measurement> measurementFinishedObservable() {
+    	return measurementViewAddedObservable.flatMap(MeasurementView::finishedObservable).doOnNext(next -> System.out.println("no kurwa finished!")).map(MeasurementView::getMeasurement);
+    }
+
     private class Behaviour {
 
-    	private void onNewMeasurementCreated(MeasurementView measurementView) {
+//    	private void onNewMeasurementCreated(MeasurementView measurementView) {
+//
+//
+//    		setEventsReceiver(measurementView);
+//    		addMeasurement(measurementView);
+//    	}
 
-    		setEventsReceiver(measurementView);
-    		addMeasurement(measurementView);
-    	}
-
-    	private void onMeasurementAdded(Measurement measurement) {
+    	private void addMeasurement(Measurement measurement) {
     		if (!measurementExists(measurement)) {
     			switch (measurement.getType()) {
 					case POLYGON :
 						PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView(measurement);
-						addMeasurement(polygonMeasurementView);
+						measurementsViews.add(polygonMeasurementView);
+				        imagePanelView.getChildren().add(polygonMeasurementView);
+				        setEventsReceiver(polygonMeasurementView);
+
+//						addMeasurement(polygonMeasurementView);
 						break;
 					case LINE :
 

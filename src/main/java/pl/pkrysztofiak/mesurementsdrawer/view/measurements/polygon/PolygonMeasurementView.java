@@ -45,7 +45,11 @@ public class PolygonMeasurementView extends MeasurementView {
     }
 
     private void initSubscriptions() {
+    	Observable.fromIterable(points).subscribe(behaviour::onPointAdded);
+
         pointAddedObservable.subscribe(behaviour::onPointAdded);
+
+
         drawingBehaviourChangeObservablbe.subscribe(behaviour::onDrawingBehaviourChanged);
 
         measurementInitializedObservable.cast(PolygonMeasurement.class).subscribe(behaviour::onMeasurmentInitialized);
@@ -58,11 +62,13 @@ public class PolygonMeasurementView extends MeasurementView {
 
     @Override
     public void onMouseReleased(MouseEvent mouseEvent) {
-    	Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
-    	if (points.isEmpty()) {
-    		JavaFxObservable.valuesOf(point.previousPointProperty()).filter(Optional::isPresent).subscribe(previousPoint -> finishedPublishable.onNext(this));
-    	}
-		points.add(point);
+    	points.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
+
+//    	Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
+//    	if (points.isEmpty()) {
+//    		JavaFxObservable.valuesOf(point.previousPointProperty()).filter(Optional::isPresent).subscribe(previousPoint -> finishedPublishable.onNext(this));
+//    	}
+//		points.add(point);
     }
 
     @Override
@@ -77,6 +83,12 @@ public class PolygonMeasurementView extends MeasurementView {
     	}
 
         private void onPointAdded(Point point) {
+			if (points.size() == 1) {
+				JavaFxObservable.valuesOf(point.previousPointProperty()).filter(Optional::isPresent).subscribe(previousPoint -> {
+					finishedPublishable.onNext(PolygonMeasurementView.this);
+				});
+			}
+
         	int indexOf = points.indexOf(point);
 			ListIterator<Point> forwardsListIterator = points.listIterator(indexOf + 1);
 			ListIterator<Point> backwardsListIterator = points.listIterator(indexOf);

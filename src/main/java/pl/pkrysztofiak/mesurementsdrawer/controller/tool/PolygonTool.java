@@ -1,7 +1,8 @@
 package pl.pkrysztofiak.mesurementsdrawer.controller.tool;
 
 import javafx.scene.input.MouseEvent;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
+import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
+import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
 
 public class PolygonTool extends Tool {
 
@@ -25,8 +26,10 @@ public class PolygonTool extends Tool {
     private class Behaviour {
 
         private void onMouseReleased(MouseEvent mouseEvent) {
-            PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView();
-            newMeasurementCreatedPubslishable.onNext(polygonMeasurementView);
+        	newMeasurementCreatedPublishable.onNext(new PolygonMeasurement(new Point(mouseEvent.getX(), mouseEvent.getY())));
+
+//            PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView();
+//            newMeasurementViewCreatedPubslishable.onNext(polygonMeasurementView);
         }
     }
 }
