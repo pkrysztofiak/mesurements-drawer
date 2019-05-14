@@ -1,6 +1,7 @@
 package pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon;
 
 
+import java.util.ListIterator;
 import java.util.Optional;
 
 import io.reactivex.Observable;
@@ -57,33 +58,11 @@ public class PolygonMeasurementView extends MeasurementView {
 
     @Override
     public void onMouseReleased(MouseEvent mouseEvent) {
-//    	points.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
-
-        Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
-        if (points.isEmpty()) {
-            point.setSelected(true);
-            points.add(point);
-
-            JavaFxObservable.valuesOf(point.previousPointProperty()).filter(Optional::isPresent).subscribe(previousPoint -> finishedPublishable.onNext(this));
-        } else {
-            points.stream().filter(Point::isSelected).findFirst().ifPresent(selectedPoint -> {
-                if (!selectedPoint.getNextPoint().isPresent()) {
-                	selectedPoint.setNextPoint(point);
-                    point.setSelected(true);
-                    selectedPoint.setSelected(false);
-
-                    return;
-                }
-
-                if (!selectedPoint.getPreviousPoint().isPresent()) {
-                	selectedPoint.setPreviousPoint(point);
-                    point.setSelected(true);
-
-                    selectedPoint.setSelected(false);
-                    return;
-                }
-            });
-        }
+    	Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
+    	if (points.isEmpty()) {
+    		JavaFxObservable.valuesOf(point.previousPointProperty()).filter(Optional::isPresent).subscribe(previousPoint -> finishedPublishable.onNext(this));
+    	}
+		points.add(point);
     }
 
     @Override
@@ -98,12 +77,21 @@ public class PolygonMeasurementView extends MeasurementView {
     	}
 
         private void onPointAdded(Point point) {
-        	JavaFxObservable.changesOf(point.nextPointProperty())
-        	.map(Change::getNewVal)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .takeUntil(pointRemovedObservable.filter(point::equals))
-            .subscribe(points::add);
+        	int indexOf = points.indexOf(point);
+			ListIterator<Point> forwardsListIterator = points.listIterator(indexOf + 1);
+			ListIterator<Point> backwardsListIterator = points.listIterator(indexOf);
+
+        	System.out.println("indexOf=" + indexOf + ", points.size=" + points.size());
+
+        	if (backwardsListIterator.hasPrevious()) {
+        		System.out.println("has previous");
+        		point.setPreviousPoint(points.get(backwardsListIterator.previousIndex()));
+        	}
+
+        	if (forwardsListIterator.hasNext()) {
+        		System.out.println("has next");
+        		point.setNextPoint(points.get(forwardsListIterator.nextIndex()));
+        	}
         }
 
         private void onDrawingBehaviourChanged(Change<Optional<PolygonDrawingBehaviour>> change) {

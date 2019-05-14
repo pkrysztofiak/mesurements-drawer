@@ -1,20 +1,15 @@
 package pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.behaviour;
 
 import java.util.List;
-import java.util.Optional;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
-import io.reactivex.rxjavafx.sources.Change;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.PolygonPointCircle;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.behaviour.onmouseclicked.OnMouseClicked;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.behaviour.onmouseclicked.OnMouseClickedFirst;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.behaviour.onmouseclicked.OnMouseClickedLazy;
 
 public class PolygonUnfinishedDrawingBehaviour extends PolygonDrawingBehaviour {
 
@@ -39,42 +34,35 @@ public class PolygonUnfinishedDrawingBehaviour extends PolygonDrawingBehaviour {
     private class Behaviour {
 
         private void onPointAdded(Point point) {
-        	PolygonPointCircle polygonPointCircle = new PolygonPointCircle(new Circle(8, Color.BLUEVIOLET)) {
-
-        		private final PointBehaviour pointBehaviour = new PointBehaviour();
-
-        		private OnMouseClicked onMouseClicked = new OnMouseClickedLazy(point);
-
-        		private final Observable<MouseEvent> pointClicked = JavaFxObservable.eventsOf(getNode(), MouseEvent.MOUSE_PRESSED);
-        		private final Observable<Change<Optional<Point>>> nextPointChangedObservable = JavaFxObservable.changesOf(point.nextPointProperty());
-        		private final Observable<Optional<Point>> nextPointObservable = JavaFxObservable.valuesOf(point.nextPointProperty());
-        		private final Observable<Point> pointRemovedObservable = pointRemovedObservable().filter(point::equals).take(1);
+        	PolygonPointCircle polygonPointCircle = new PolygonPointCircle(new Circle(8, Color.GREEN)) {
 
         		{
-        			pointsSizeObservable.subscribe(pointBehaviour::onPointsSizeChanged);
-        			pointClicked.subscribe(pointBehaviour::onMouseClicked);
-//        			nextPointChangedObservable.subscribe(behaviour::onNextPointChanged);
-        			nextPointObservable.subscribe(behaviour::onNextPointChange);
-        		}
+        			point.previousPointObservable().subscribe(optionalPoint -> {
+        				if (optionalPoint.isPresent()) {
+        					System.out.println("previous point present");
+        					Point previousPoint = optionalPoint.get();
+        					System.out.println("current x=" + point.getLayoutX() + ", y=" + point.getLayoutY());
+        					System.out.println("previous x=" + previousPoint.getLayoutX() + ", y=" + previousPoint.getLayoutY());
 
-        		private void setOnMouseClicked(OnMouseClicked onMouseClicked) {
-        			this.onMouseClicked = onMouseClicked;
-        		}
+        					Line line = new Line();
+                			line.setStroke(Color.CYAN);
 
-        		class PointBehaviour implements OnMouseClicked {
+                			line.startXProperty().bindBidirectional(previousPoint.layoutXProperty());
+                			line.startYProperty().bindBidirectional(previousPoint.layoutYProperty());
 
-        			@Override
-					public void onMouseClicked(MouseEvent mouseEvent) {
-        				onMouseClicked.onMouseClicked(mouseEvent);
-        			}
+                			line.endXProperty().bindBidirectional(point.layoutXProperty());
+                			line.endYProperty().bindBidirectional(point.layoutYProperty());
 
-        			private void onPointsSizeChanged(int size) {
-        				if (size > 2) {
-        					setOnMouseClicked(new OnMouseClickedFirst(point));
-        				} else {
-        					setOnMouseClicked(new OnMouseClickedLazy(point));
+                			children.add(0, line);
         				}
-        			}
+        			});
+
+        			JavaFxObservable.eventsOf(getNode(), MouseEvent.MOUSE_RELEASED)
+        			.subscribe(mouseEvent -> {
+        				System.out.println("przejąłem");
+        				mouseEvent.consume();
+        				points.get(0).setPreviousPoint(points.get(points.size() - 1));
+        			});
         		}
         	};
 
@@ -82,38 +70,6 @@ public class PolygonUnfinishedDrawingBehaviour extends PolygonDrawingBehaviour {
             circle.layoutXProperty().bindBidirectional(point.layoutXProperty());
             circle.layoutYProperty().bindBidirectional(point.layoutYProperty());
             children.add(circle);
-        }
-
-        private void onNextPointChange(Optional<Point> optionalPoint) {
-        	optionalPoint.ifPresent(point -> {
-        		point.getPreviousPoint().ifPresent(previousPoint -> {
-        			Line line = new Line();
-        			line.setStroke(Color.CYAN);
-
-        			line.startXProperty().bindBidirectional(previousPoint.layoutXProperty());
-        			line.startYProperty().bindBidirectional(previousPoint.layoutYProperty());
-
-        			line.endXProperty().bindBidirectional(previousPoint.getNextPoint().get().layoutXProperty());
-        			line.endYProperty().bindBidirectional(previousPoint.getNextPoint().get().layoutYProperty());
-
-        			children.add(0, line);
-        		});
-        	});
-        }
-
-        private void onNextPointChanged(Change<Optional<Point>> change) {
-        	change.getNewVal().flatMap(Point::getPreviousPoint).ifPresent(previousPoint -> {
-        		Line line = new Line();
-    			line.setStroke(Color.CYAN);
-
-    			line.startXProperty().bindBidirectional(previousPoint.layoutXProperty());
-                line.startYProperty().bindBidirectional(previousPoint.layoutYProperty());
-
-                line.endXProperty().bindBidirectional(previousPoint.getNextPoint().get().layoutXProperty());
-                line.endYProperty().bindBidirectional(previousPoint.getNextPoint().get().layoutYProperty());
-
-                children.add(0, line);
-        	});
         }
     }
 }

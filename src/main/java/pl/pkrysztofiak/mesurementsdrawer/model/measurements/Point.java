@@ -59,8 +59,16 @@ public class Point {
         return previousPointProperty;
     }
 
+    public Observable<Optional<Point>> previousPointObservable() {
+    	return previousePointObservable;
+    }
+
     public ObjectProperty<Optional<Point>> nextPointProperty() {
         return nextPointProperty;
+    }
+
+    public Observable<Optional<Point>> nextPointObservable() {
+    	return nextPointObservable;
     }
 
     public void setNextPoint(Point nextPoint) {
