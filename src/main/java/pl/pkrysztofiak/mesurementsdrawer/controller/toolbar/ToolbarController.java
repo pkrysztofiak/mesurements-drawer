@@ -20,8 +20,8 @@ public class ToolbarController {
 		return toolController.selectedToolObservable();
 	}
 
-	public Observable<MeasurementView> measurementCreatedObservable() {
-		return toolController.measurementCreatedObservable();
+	public Observable<MeasurementView> newMeasurementCreatedObservable() {
+		return toolController.newMeasurementCreatedObservable();
 	}
 
 	public Tool getSelectedTool() {

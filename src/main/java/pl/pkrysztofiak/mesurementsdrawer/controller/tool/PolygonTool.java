@@ -26,7 +26,7 @@ public class PolygonTool extends Tool {
 
         private void onMouseReleased(MouseEvent mouseEvent) {
             PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView();
-            measurementCreatedPubslishable.onNext(polygonMeasurementView);
+            newMeasurementCreatedPubslishable.onNext(polygonMeasurementView);
         }
     }
 }

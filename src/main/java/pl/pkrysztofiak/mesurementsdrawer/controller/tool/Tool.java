@@ -7,11 +7,11 @@ import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 
 public abstract class Tool implements EventsReceiver {
 
-    protected final PublishSubject<MeasurementView> measurementCreatedPubslishable = PublishSubject.create();
+    protected final PublishSubject<MeasurementView> newMeasurementCreatedPubslishable = PublishSubject.create();
 
     public abstract ToolType getType();
 
-    public Observable<MeasurementView> measurementCreatedObservable() {
-    	return measurementCreatedPubslishable;
+    public Observable<MeasurementView> newMeasurementCreatedObservable() {
+    	return newMeasurementCreatedPubslishable;
     }
 }

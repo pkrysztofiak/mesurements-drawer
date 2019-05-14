@@ -34,7 +34,7 @@ public class PanelController {
 
 	private void initSubscriptions() {
 		toolbarController.selectedToolObservable().subscribe(behaviour::onSelectedToolChanged);
-		toolbarController.measurementCreatedObservable().subscribe(behaviour::onMeasurementCreated);
+		toolbarController.newMeasurementCreatedObservable().subscribe(behaviour::onNewMeasurementCreated);
 	}
 
 	public ImagePanelController getImagePanelController() {
@@ -59,7 +59,7 @@ public class PanelController {
 			imagePanelController.setEventsReceiver(tool);
 		}
 
-		private void onMeasurementCreated(MeasurementView measurementView) {
+		private void onNewMeasurementCreated(MeasurementView measurementView) {
 			imagePanelController.addMeasurement(measurementView);
 			imagePanelController.setEventsReceiver(measurementView);
 

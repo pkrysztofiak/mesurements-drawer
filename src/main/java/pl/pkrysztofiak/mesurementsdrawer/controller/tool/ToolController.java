@@ -21,8 +21,8 @@ public class ToolController {
     	selectedToolProperty.set(tool);
     }
 
-    public Observable<MeasurementView> measurementCreatedObservable() {
-    	return selectedToolObservable.switchMap(Tool::measurementCreatedObservable);
+    public Observable<MeasurementView> newMeasurementCreatedObservable() {
+    	return selectedToolObservable.switchMap(Tool::newMeasurementCreatedObservable);
     }
 
     public Tool getSelectedTool() {

@@ -47,7 +47,6 @@ public class ImagePanelController {
 
     private void initSubscriptions() {
         eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
-
         measurementAddedObservable.subscribe(behaviour::onMeasurementAdded);
     }
 
