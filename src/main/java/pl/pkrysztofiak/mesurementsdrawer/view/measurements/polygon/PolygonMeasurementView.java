@@ -48,10 +48,7 @@ public class PolygonMeasurementView extends MeasurementView {
     	Observable.fromIterable(points).subscribe(behaviour::onPointAdded);
 
         pointAddedObservable.subscribe(behaviour::onPointAdded);
-
-
         drawingBehaviourChangeObservablbe.subscribe(behaviour::onDrawingBehaviourChanged);
-
         measurementInitializedObservable.cast(PolygonMeasurement.class).subscribe(behaviour::onMeasurmentInitialized);
     }
 
@@ -63,12 +60,6 @@ public class PolygonMeasurementView extends MeasurementView {
     @Override
     public void onMouseReleased(MouseEvent mouseEvent) {
     	points.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
-
-//    	Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
-//    	if (points.isEmpty()) {
-//    		JavaFxObservable.valuesOf(point.previousPointProperty()).filter(Optional::isPresent).subscribe(previousPoint -> finishedPublishable.onNext(this));
-//    	}
-//		points.add(point);
     }
 
     @Override
@@ -89,21 +80,16 @@ public class PolygonMeasurementView extends MeasurementView {
 				});
 			}
 
-        	int indexOf = points.indexOf(point);
-			ListIterator<Point> forwardsListIterator = points.listIterator(indexOf + 1);
-			ListIterator<Point> backwardsListIterator = points.listIterator(indexOf);
+			ListIterator<Point> listIterator = points.listIterator(points.indexOf(point));
 
-        	System.out.println("indexOf=" + indexOf + ", points.size=" + points.size());
+			if (listIterator.hasPrevious()) {
+				point.setPreviousPoint(points.get(listIterator.previousIndex()));
+			}
 
-        	if (backwardsListIterator.hasPrevious()) {
-        		System.out.println("has previous");
-        		point.setPreviousPoint(points.get(backwardsListIterator.previousIndex()));
-        	}
-
-        	if (forwardsListIterator.hasNext()) {
-        		System.out.println("has next");
-        		point.setNextPoint(points.get(forwardsListIterator.nextIndex()));
-        	}
+			listIterator.next();
+			if (listIterator.hasNext()) {
+				point.setNextPoint(points.get(listIterator.nextIndex()));
+			}
         }
 
         private void onDrawingBehaviourChanged(Change<Optional<PolygonDrawingBehaviour>> change) {

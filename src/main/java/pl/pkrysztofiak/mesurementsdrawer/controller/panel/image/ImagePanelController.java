@@ -53,18 +53,9 @@ public class ImagePanelController {
     	behaviour.addMeasurement(measurement);
     }
 
-//    public void onNewMeasurementCreated(MeasurementView measurementView) {
-//    	behaviour.onNewMeasurementCreated(measurementView);
-//    }
-
     public void setSelected(boolean value) {
         imagePanelView.setSelected(value);
     }
-
-//    public void addMeasurement(MeasurementView measurementView) {
-//        measurementsViews.add(measurementView);
-//        imagePanelView.getChildren().add(measurementView);
-//    }
 
     public Observable<MouseEvent> mouseReleasedObservable() {
         return imagePanelView.mouseReleasedObservable();
@@ -104,13 +95,6 @@ public class ImagePanelController {
 
     private class Behaviour {
 
-//    	private void onNewMeasurementCreated(MeasurementView measurementView) {
-//
-//
-//    		setEventsReceiver(measurementView);
-//    		addMeasurement(measurementView);
-//    	}
-
     	private void addMeasurement(Measurement measurement) {
     		if (!measurementExists(measurement)) {
     			switch (measurement.getType()) {
@@ -119,8 +103,6 @@ public class ImagePanelController {
 						measurementsViews.add(polygonMeasurementView);
 				        imagePanelView.getChildren().add(polygonMeasurementView);
 				        setEventsReceiver(polygonMeasurementView);
-
-//						addMeasurement(polygonMeasurementView);
 						break;
 					case LINE :
 
