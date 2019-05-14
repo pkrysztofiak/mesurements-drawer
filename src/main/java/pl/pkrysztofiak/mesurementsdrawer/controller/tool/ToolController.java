@@ -6,7 +6,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementViewOld;
 
 public class ToolController {
 
@@ -22,7 +22,7 @@ public class ToolController {
     	selectedToolProperty.set(tool);
     }
 
-    public Observable<MeasurementView> newMeasurementViewCreatedObservable() {
+    public Observable<MeasurementViewOld> newMeasurementViewCreatedObservable() {
     	return selectedToolObservable.switchMap(Tool::newMeasurementViewCreatedObservable);
     }
 

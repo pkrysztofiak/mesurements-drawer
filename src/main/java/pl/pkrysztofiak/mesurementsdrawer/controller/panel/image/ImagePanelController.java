@@ -9,10 +9,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
+import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.PolygonMeasurmentController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
+import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView2;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementViewOld;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView2;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanelView;
 
 public class ImagePanelController {
@@ -29,9 +32,11 @@ public class ImagePanelController {
     private final ObservableList<Measurement> measurements = FXCollections.observableArrayList();
     private final Observable<Measurement> measurementAddedObservable = JavaFxObservable.additionsOf(measurements);
 
-    private final ObservableList<MeasurementView> measurementsViews = FXCollections.observableArrayList();
-    private final Observable<MeasurementView> measurementViewAddedObservable = JavaFxObservable.additionsOf(measurementsViews);
-    private final Observable<MeasurementView> measurementViewRemovedObservable = JavaFxObservable.removalsOf(measurementsViews);
+    private final ObservableList<MeasurementView2> measurementsViews = FXCollections.observableArrayList();
+    private final Observable<MeasurementView2> measurementViewAddedObservable = JavaFxObservable.additionsOf(measurementsViews);
+
+    private final ObservableList<MeasurementViewOld> measurementsViewsOld = FXCollections.observableArrayList();
+    private final Observable<MeasurementViewOld> measurementViewAddedObservableOld = JavaFxObservable.additionsOf(measurementsViewsOld);
 
     private final ObjectProperty<EventsReceiver> eventsReceiverPropety = new SimpleObjectProperty<>();
     private final Observable<EventsReceiver> eventsReceiverObservable = JavaFxObservable.valuesOf(eventsReceiverPropety);
@@ -65,9 +70,9 @@ public class ImagePanelController {
         return imagePanelView.mouseAnyObservable();
     }
 
-    public Observable<MeasurementView> measurementAddedObservable() {
-    	return measurementViewAddedObservable;
-    }
+//    public Observable<MeasurementView> measurementAddedObservable() {
+//    	return measurementViewAddedObservable;
+//    }
 
     public boolean equals(ImagePanelController imagePanelController) {
         return this == imagePanelController;
@@ -77,8 +82,8 @@ public class ImagePanelController {
         return this != imagePanelController;
     }
 
-    public ObservableList<MeasurementView> getMeasurements() {
-        return measurementsViews;
+    public ObservableList<MeasurementViewOld> getMeasurements() {
+        return measurementsViewsOld;
     }
 
     public int getId() {
@@ -90,7 +95,8 @@ public class ImagePanelController {
     }
 
     public Observable<Measurement> measurementFinishedObservable() {
-    	return measurementViewAddedObservable.flatMap(MeasurementView::finishedObservable).doOnNext(next -> System.out.println("no kurwa finished!")).map(MeasurementView::getMeasurement);
+    	//TODO do poprawinia
+    	return measurementViewAddedObservableOld.flatMap(MeasurementViewOld::finishedObservable).map(MeasurementViewOld::getMeasurement);
     }
 
     private class Behaviour {
@@ -99,10 +105,22 @@ public class ImagePanelController {
     		if (!measurementExists(measurement)) {
     			switch (measurement.getType()) {
 					case POLYGON :
-						PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView(measurement);
-						measurementsViews.add(polygonMeasurementView);
-				        imagePanelView.getChildren().add(polygonMeasurementView);
-				        setEventsReceiver(polygonMeasurementView);
+						PolygonMeasurement polygonMeasurement = (PolygonMeasurement) measurement;
+
+						PolygonMeasurementView2 polygonMeasurementView = new PolygonMeasurementView2(polygonMeasurement);
+						PolygonMeasurmentController polygonMeasurmentController = new PolygonMeasurmentController(polygonMeasurementView);
+
+//						PolygonMeasurementViewOld polygonMeasurementViewOld = new PolygonMeasurementViewOld(measurement);
+//						PolygonMeasurmentController polygonMeasurmentController = new PolygonMeasurmentController(polygonMeasurementViewOld, polygonMeasurement);
+						setEventsReceiver(polygonMeasurmentController);
+						imagePanelView.getChildren().add(polygonMeasurementView);
+						//TODO zmienić
+//						measurementsViews.add(polygonMeasurementView);
+
+//						PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView(measurement);
+//						measurementsViews.add(polygonMeasurementView);
+//				        imagePanelView.getChildren().add(polygonMeasurementView);
+//				        setEventsReceiver(polygonMeasurementView);
 						break;
 					case LINE :
 
@@ -114,7 +132,7 @@ public class ImagePanelController {
     	}
 
     	private boolean measurementExists(Measurement measurement) {
-    		return measurementsViews.stream().map(MeasurementView::getMeasurement).map(Measurement::getId).anyMatch(measurement.getId()::equals);
+    		return measurementsViewsOld.stream().map(MeasurementViewOld::getMeasurement).map(Measurement::getId).anyMatch(measurement.getId()::equals);
     	}
 
     }

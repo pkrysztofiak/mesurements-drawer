@@ -17,11 +17,11 @@ import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.MeasurementType;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementViewOld;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.behaviour.PolygonDrawingBehaviour;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.behaviour.PolygonUnfinishedDrawingBehaviour;
 
-public class PolygonMeasurementView extends MeasurementView {
+public class PolygonMeasurementViewOld extends MeasurementViewOld {
 
     private Behaviour behaviour = new Behaviour();
 
@@ -32,21 +32,13 @@ public class PolygonMeasurementView extends MeasurementView {
     private final ObjectProperty<Optional<PolygonDrawingBehaviour>> drawingBehaviourProperty = new SimpleObjectProperty<>(Optional.empty());
     private final Observable<Change<Optional<PolygonDrawingBehaviour>>> drawingBehaviourChangeObservablbe = JavaFxObservable.changesOf(drawingBehaviourProperty);
 
-    public PolygonMeasurementView() {
-    	super(new PolygonMeasurement());
-        initSubscriptions();
-        drawingBehaviourProperty.set(Optional.of(new PolygonUnfinishedDrawingBehaviour()));
-    }
-
-    public PolygonMeasurementView(Measurement polygonMeasurement) {
+    public PolygonMeasurementViewOld(Measurement polygonMeasurement) {
     	super(polygonMeasurement);
     	initSubscriptions();
     	drawingBehaviourProperty.set(Optional.of(new PolygonUnfinishedDrawingBehaviour()));
     }
 
     private void initSubscriptions() {
-    	Observable.fromIterable(points).subscribe(behaviour::onPointAdded);
-
         pointAddedObservable.subscribe(behaviour::onPointAdded);
         drawingBehaviourChangeObservablbe.subscribe(behaviour::onDrawingBehaviourChanged);
         measurementInitializedObservable.cast(PolygonMeasurement.class).subscribe(behaviour::onMeasurmentInitialized);
@@ -67,7 +59,7 @@ public class PolygonMeasurementView extends MeasurementView {
         return "Polygon[points=" + points + "]";
     }
 
-    private class Behaviour {
+	private class Behaviour {
 
     	private void onMeasurmentInitialized(PolygonMeasurement polygonMeasurement) {
     		Bindings.bindContentBidirectional(points, polygonMeasurement.getPoints());
@@ -76,7 +68,7 @@ public class PolygonMeasurementView extends MeasurementView {
         private void onPointAdded(Point point) {
 			if (points.size() == 1) {
 				JavaFxObservable.valuesOf(point.previousPointProperty()).filter(Optional::isPresent).subscribe(previousPoint -> {
-					finishedPublishable.onNext(PolygonMeasurementView.this);
+					finishedPublishable.onNext(PolygonMeasurementViewOld.this);
 				});
 			}
 

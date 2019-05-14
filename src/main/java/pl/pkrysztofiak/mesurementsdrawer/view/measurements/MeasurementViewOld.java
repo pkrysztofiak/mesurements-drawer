@@ -10,21 +10,21 @@ import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.MeasurementType;
 
-public abstract class MeasurementView extends Pane implements EventsReceiver {
+public abstract class MeasurementViewOld extends Pane implements EventsReceiver {
 
-	protected PublishSubject<MeasurementView> finishedPublishable = PublishSubject.create();
+	protected PublishSubject<MeasurementViewOld> finishedPublishable = PublishSubject.create();
 
 	protected ObjectProperty<Measurement> measurementProperty = new SimpleObjectProperty<>();
 	protected Observable<Measurement> measurementInitializedObservable = JavaFxObservable.valuesOf(measurementProperty).take(1);
 
     public abstract MeasurementType getType();
 
-    public MeasurementView(Measurement measurement) {
+    public MeasurementViewOld(Measurement measurement) {
     	measurementProperty.set(measurement);
         setPickOnBounds(false);
     }
 
-    public Observable<MeasurementView> finishedObservable() {
+    public Observable<MeasurementViewOld> finishedObservable() {
     	return finishedPublishable.take(1);
     }
 
