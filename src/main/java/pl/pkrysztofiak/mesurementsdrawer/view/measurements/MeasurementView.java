@@ -24,7 +24,7 @@ public abstract class MeasurementView extends Pane implements EventsReceiver {
         setPickOnBounds(false);
     }
 
-    public Observable<MeasurementView> finishedObservale() {
+    public Observable<MeasurementView> finishedObservable() {
     	return finishedPublishable.take(1);
     }
 

@@ -36,7 +36,6 @@ public class ImagePanelController {
     private final ObjectProperty<EventsReceiver> eventsReceiverPropety = new SimpleObjectProperty<>();
     private final Observable<EventsReceiver> eventsReceiverObservable = JavaFxObservable.valuesOf(eventsReceiverPropety);
 
-
     public ImagePanelController(ImagePanelView imagePanelView, Model model) {
         this.imagePanelView = imagePanelView;
         this.model = model;
@@ -48,6 +47,10 @@ public class ImagePanelController {
     private void initSubscriptions() {
         eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
         measurementAddedObservable.subscribe(behaviour::onMeasurementAdded);
+    }
+
+    public void onNewMeasurementCreated(MeasurementView measurementView) {
+    	behaviour.onNewMeasurementCreated(measurementView);
     }
 
     public void setSelected(boolean value) {
@@ -92,6 +95,12 @@ public class ImagePanelController {
     }
 
     private class Behaviour {
+
+    	private void onNewMeasurementCreated(MeasurementView measurementView) {
+
+    		setEventsReceiver(measurementView);
+    		addMeasurement(measurementView);
+    	}
 
     	private void onMeasurementAdded(Measurement measurement) {
     		if (!measurementExists(measurement)) {

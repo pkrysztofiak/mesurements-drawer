@@ -35,6 +35,7 @@ public class PanelController {
 	private void initSubscriptions() {
 		toolbarController.selectedToolObservable().subscribe(behaviour::onSelectedToolChanged);
 		toolbarController.newMeasurementCreatedObservable().subscribe(behaviour::onNewMeasurementCreated);
+		toolbarController.newMeasurementCreatedObservable().subscribe(imagePanelController::onNewMeasurementCreated);
 	}
 
 	public ImagePanelController getImagePanelController() {
@@ -60,11 +61,7 @@ public class PanelController {
 		}
 
 		private void onNewMeasurementCreated(MeasurementView measurementView) {
-			imagePanelController.addMeasurement(measurementView);
-			imagePanelController.setEventsReceiver(measurementView);
-
-			//TODO dopisać takeUntil na usunięcie (dodatkowy proprties)
-			measurementView.finishedObservale().subscribe(this::onMeasurementFinished);
+			measurementView.finishedObservable().subscribe(this::onMeasurementFinished);
 		}
 
 		private void onMeasurementFinished(MeasurementView measurementView) {
