@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.behaviour.OnMouseHoverAbstract;
 
+//TO REMOVE
 public abstract class PointNode<N extends Node> {
 
 	protected N node;

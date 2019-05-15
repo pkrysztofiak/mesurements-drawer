@@ -3,6 +3,7 @@ package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape;
 import javafx.scene.shape.Circle;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.behaviour.OnMouseHoverCircleLazy;
 
+//TO REMOVE
 public class PolygonPointCircle extends PointNode<Circle> {
 
 	public PolygonPointCircle(Circle circle) {
