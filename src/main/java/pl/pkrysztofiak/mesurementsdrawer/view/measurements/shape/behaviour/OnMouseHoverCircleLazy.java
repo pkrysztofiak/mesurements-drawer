@@ -1,4 +1,4 @@
-package pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.behaviour;
+package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.behaviour;
 
 import javafx.scene.shape.Circle;
 

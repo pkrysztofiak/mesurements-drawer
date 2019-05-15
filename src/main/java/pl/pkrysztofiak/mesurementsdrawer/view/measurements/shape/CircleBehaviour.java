@@ -1,4 +1,4 @@
-package pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics;
+package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape;
 
 import io.reactivex.functions.Consumer;
 import javafx.scene.paint.Color;

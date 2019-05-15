@@ -1,4 +1,4 @@
-package pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.line;
+package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;

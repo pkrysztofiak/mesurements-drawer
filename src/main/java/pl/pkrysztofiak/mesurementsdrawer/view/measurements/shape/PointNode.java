@@ -1,9 +1,9 @@
-package pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics;
+package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.behaviour.OnMouseHoverAbstract;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.behaviour.OnMouseHoverAbstract;
 
 public abstract class PointNode<N extends Node> {
 

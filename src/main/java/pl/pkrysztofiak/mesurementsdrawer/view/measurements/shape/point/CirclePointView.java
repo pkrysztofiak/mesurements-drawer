@@ -1,4 +1,4 @@
-package pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point;
+package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;

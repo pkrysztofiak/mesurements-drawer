@@ -1,7 +1,7 @@
-package pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics;
+package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape;
 
 import javafx.scene.shape.Circle;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.behaviour.OnMouseHoverCircleLazy;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.behaviour.OnMouseHoverCircleLazy;
 
 public class PolygonPointCircle extends PointNode<Circle> {
 

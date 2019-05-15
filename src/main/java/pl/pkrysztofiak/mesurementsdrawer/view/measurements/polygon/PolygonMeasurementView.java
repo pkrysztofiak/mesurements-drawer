@@ -2,10 +2,10 @@ package pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon;
 
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.line.ConnectorView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.line.LineView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point.CirclePointView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point.PointView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.ConnectorView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.CirclePointView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.PointView;
 
 public class PolygonMeasurementView extends MeasurementView {
 

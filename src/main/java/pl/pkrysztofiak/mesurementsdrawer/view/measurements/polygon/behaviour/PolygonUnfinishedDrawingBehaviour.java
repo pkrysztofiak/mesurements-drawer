@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.PolygonPointCircle;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.PolygonPointCircle;
 
 public class PolygonUnfinishedDrawingBehaviour extends PolygonDrawingBehaviour {
 

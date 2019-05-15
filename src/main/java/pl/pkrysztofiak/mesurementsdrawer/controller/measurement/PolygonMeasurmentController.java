@@ -12,9 +12,9 @@ import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.line.LineView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point.CirclePointView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.CirclePointView;
 
 public class PolygonMeasurmentController extends MeasurementController implements EventsReceiver {
 
