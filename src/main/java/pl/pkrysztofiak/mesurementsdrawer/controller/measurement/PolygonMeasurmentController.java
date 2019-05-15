@@ -22,7 +22,6 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
-	private final Observable<Integer> pointAddedIndexObservable = pointAddedObservable.map(points::indexOf);
 
 	private final Observable<ObservableList<Point>> pointsObservable = JavaFxObservable.emitOnChanged(points);
 
