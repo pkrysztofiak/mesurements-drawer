@@ -1,6 +1,7 @@
 package pl.pkrysztofiak.mesurementsdrawer.controller.measurement;
 
 import java.util.ListIterator;
+import java.util.Optional;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
@@ -57,6 +58,14 @@ public class PolygonMeasurmentController extends MeasurementController implement
 				point.setNextPoint(points.get(listIterator.nextIndex()));
 			}
 			polygonMeasurementView.addPoint(point);
+
+			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(behaviour::onNexPointSet);
+		}
+
+		private void onNexPointSet(Point nextPoint) {
+			polygonMeasurementView.addLine(nextPoint.getPreviousPoint().get(), nextPoint);
+//			System.out.println(point);
+//			polygonMeasurementView.addLine(point, point.getNextPoint().get());
 		}
 	}
 }

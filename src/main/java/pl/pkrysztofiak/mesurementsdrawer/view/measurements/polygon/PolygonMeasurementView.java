@@ -1,13 +1,10 @@
 package pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon;
 
-import io.reactivex.rxjavafx.observables.JavaFxObservable;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.PolygonPointCircle;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.line.LineView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point.CirclePointView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point.PointView;
 
 public class PolygonMeasurementView extends MeasurementView {
 
@@ -34,44 +31,57 @@ public class PolygonMeasurementView extends MeasurementView {
 		behaviour.addPoint(point);
 	}
 
+	public void addLine(Point startPoint, Point endPoint) {
+		behaviour.addLine(startPoint, endPoint);
+	}
+
 	private class Behaviour {
 
+		private void addLine(Point startPoint, Point endPoint) {
+			LineView lineView = new LineView(startPoint, endPoint);
+			getChildren().add(0, lineView);
+		}
+
 		private void addPoint(Point point) {
-			PolygonPointCircle polygonPointCircle = new PolygonPointCircle(new Circle(8, Color.GREEN)) {
+			PointView pointView = new CirclePointView(point);
+			getChildren().add(pointView);
 
-        		{
-        			point.previousPointObservable().subscribe(optionalPoint -> {
-        				if (optionalPoint.isPresent()) {
-        					Point previousPoint = optionalPoint.get();
 
-        					Line line = new Line();
-                			line.setStroke(Color.CYAN);
-
-                			line.startXProperty().bindBidirectional(previousPoint.layoutXProperty());
-                			line.startYProperty().bindBidirectional(previousPoint.layoutYProperty());
-
-                			line.endXProperty().bindBidirectional(point.layoutXProperty());
-                			line.endYProperty().bindBidirectional(point.layoutYProperty());
-
-//                			children.add(0, line);
-                			getChildren().add(0, line);
-        				}
-        			});
-
-        			JavaFxObservable.eventsOf(getNode(), MouseEvent.MOUSE_RELEASED)
-        			.subscribe(mouseEvent -> {
-        				System.out.println("CONSUMED");
-        				mouseEvent.consume();
-//        				points.get(0).setPreviousPoint(points.get(points.size() - 1));
-        			});
-        		}
-        	};
-
-        	Circle circle = polygonPointCircle.getNode();
-            circle.layoutXProperty().bindBidirectional(point.layoutXProperty());
-            circle.layoutYProperty().bindBidirectional(point.layoutYProperty());
-//            children.add(circle);
-            getChildren().add(circle);
+//			PolygonPointCircle polygonPointCircle = new PolygonPointCircle(new Circle(8, Color.GREEN)) {
+//
+//        		{
+//        			point.previousPointObservable().subscribe(optionalPoint -> {
+//        				if (optionalPoint.isPresent()) {
+//        					Point previousPoint = optionalPoint.get();
+//
+//        					Line line = new Line();
+//                			line.setStroke(Color.CYAN);
+//
+//                			line.startXProperty().bindBidirectional(previousPoint.layoutXProperty());
+//                			line.startYProperty().bindBidirectional(previousPoint.layoutYProperty());
+//
+//                			line.endXProperty().bindBidirectional(point.layoutXProperty());
+//                			line.endYProperty().bindBidirectional(point.layoutYProperty());
+//
+////                			children.add(0, line);
+//                			getChildren().add(0, line);
+//        				}
+//        			});
+//
+//        			JavaFxObservable.eventsOf(getNode(), MouseEvent.MOUSE_RELEASED)
+//        			.subscribe(mouseEvent -> {
+//        				System.out.println("CONSUMED");
+//        				mouseEvent.consume();
+////        				points.get(0).setPreviousPoint(points.get(points.size() - 1));
+//        			});
+//        		}
+//        	};
+//
+//        	Circle circle = polygonPointCircle.getNode();
+//            circle.layoutXProperty().bindBidirectional(point.layoutXProperty());
+//            circle.layoutYProperty().bindBidirectional(point.layoutYProperty());
+////            children.add(circle);
+//            getChildren().add(circle);
 		}
 	}
 }
