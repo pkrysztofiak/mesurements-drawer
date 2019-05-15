@@ -12,6 +12,8 @@ import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.line.LineView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point.CirclePointView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
 
 public class PolygonMeasurmentController extends MeasurementController implements EventsReceiver {
@@ -20,6 +22,9 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
+	private final Observable<Integer> pointAddedIndexObservable = pointAddedObservable.map(points::indexOf);
+
+	private final Observable<ObservableList<Point>> pointsObservable = JavaFxObservable.emitOnChanged(points);
 
 	private final PolygonMeasurementView polygonMeasurementView;
 
@@ -29,14 +34,9 @@ public class PolygonMeasurmentController extends MeasurementController implement
 		Bindings.bindContentBidirectional(points, polygonMeasurement.getPoints());
 	}
 
-//	public PolygonMeasurmentController(PolygonMeasurementViewOld polygonMeasurementViewOld, PolygonMeasurement polygonMeasurement) {
-//		this.polygonMeasurementViewOld = polygonMeasurementViewOld;
-//		initSubscriptons();
-//		Bindings.bindContentBidirectional(points, polygonMeasurement.getPoints());
-//	}
-
 	private void initSubscriptons() {
 		pointAddedObservable.subscribe(behaviour::onPointAdded);
+
 	}
 
 	@Override
@@ -45,6 +45,10 @@ public class PolygonMeasurmentController extends MeasurementController implement
 	}
 
 	private class Behaviour {
+
+		private void onPointsChagned(ObservableList<Point> points) {
+
+		}
 
 		private void onPointAdded(Point point) {
 			ListIterator<Point> listIterator = points.listIterator(points.indexOf(point));
@@ -57,15 +61,15 @@ public class PolygonMeasurmentController extends MeasurementController implement
 			if (listIterator.hasNext()) {
 				point.setNextPoint(points.get(listIterator.nextIndex()));
 			}
-			polygonMeasurementView.addPoint(point);
+			CirclePointView pointView = new CirclePointView(point);
+			polygonMeasurementView.addPointView(pointView);
 
 			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(behaviour::onNexPointSet);
 		}
 
 		private void onNexPointSet(Point nextPoint) {
-			polygonMeasurementView.addLine(nextPoint.getPreviousPoint().get(), nextPoint);
-//			System.out.println(point);
-//			polygonMeasurementView.addLine(point, point.getNextPoint().get());
+			LineView lineView = new LineView(nextPoint.getPreviousPoint().get(), nextPoint);
+			polygonMeasurementView.addLineView(lineView);
 		}
 	}
 }

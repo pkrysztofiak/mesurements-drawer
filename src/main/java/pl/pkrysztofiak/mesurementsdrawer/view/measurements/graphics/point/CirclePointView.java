@@ -2,6 +2,7 @@ package pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -16,6 +17,8 @@ public class CirclePointView extends PointView {
 
 	private final Circle circle = new Circle(8., paint);
 	private final Observable<Boolean> hoverObservable = JavaFxObservable.valuesOf(circle.hoverProperty());
+	private final Observable<MouseEvent> mouseReleasedObservable = JavaFxObservable.eventsOf(circle, MouseEvent.MOUSE_RELEASED).doOnNext(MouseEvent::consume);
+
 	{
 		getChildren().add(circle);
 	}
@@ -36,5 +39,10 @@ public class CirclePointView extends PointView {
 		private void onHover(boolean value) {
 			circle.setFill(value ? hoverPaint : paint);
 		}
+	}
+
+	@Override
+	public Observable<MouseEvent> mouseReleasedObservable() {
+		return mouseReleasedObservable;
 	}
 }

@@ -2,6 +2,7 @@ package pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon;
 
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.line.ConnectorView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.line.LineView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point.CirclePointView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.graphics.point.PointView;
@@ -31,16 +32,37 @@ public class PolygonMeasurementView extends MeasurementView {
 		behaviour.addPoint(point);
 	}
 
-	public void addLine(Point startPoint, Point endPoint) {
-		behaviour.addLine(startPoint, endPoint);
+	public void addPointView(PointView pointView) {
+		getChildren().add(pointView);
+	}
+
+	public void addLineView(LineView lineView) {
+		getChildren().add(0, lineView);
+	}
+
+//	public void addLine(Point startPoint, Point endPoint) {
+//		behaviour.addLine(startPoint, endPoint);
+//	}
+
+	public void addLineView(ConnectorView lineView) {
+		getChildren().add(lineView);
+	}
+
+	public void addLine(Point startPoint) {
+		behaviour.addLine(startPoint);
 	}
 
 	private class Behaviour {
 
-		private void addLine(Point startPoint, Point endPoint) {
-			LineView lineView = new LineView(startPoint, endPoint);
-			getChildren().add(0, lineView);
+		private void addLine(Point startPoint) {
+//			LineView lineView = new LineView(startPoint);
+//			getChildren().add(lineView);
 		}
+
+//		private void addLine(Point startPoint, Point endPoint) {
+//			LineView lineView = new LineView(startPoint, endPoint);
+//			getChildren().add(0, lineView);
+//		}
 
 		private void addPoint(Point point) {
 			PointView pointView = new CirclePointView(point);
