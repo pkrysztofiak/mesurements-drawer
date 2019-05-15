@@ -13,9 +13,9 @@ import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.PolygonMeasurmen
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView2;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementViewOld;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView2;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanelView;
 
 public class ImagePanelController {
@@ -32,8 +32,8 @@ public class ImagePanelController {
     private final ObservableList<Measurement> measurements = FXCollections.observableArrayList();
     private final Observable<Measurement> measurementAddedObservable = JavaFxObservable.additionsOf(measurements);
 
-    private final ObservableList<MeasurementView2> measurementsViews = FXCollections.observableArrayList();
-    private final Observable<MeasurementView2> measurementViewAddedObservable = JavaFxObservable.additionsOf(measurementsViews);
+    private final ObservableList<MeasurementView> measurementsViews = FXCollections.observableArrayList();
+    private final Observable<MeasurementView> measurementViewAddedObservable = JavaFxObservable.additionsOf(measurementsViews);
 
     private final ObservableList<MeasurementViewOld> measurementsViewsOld = FXCollections.observableArrayList();
     private final Observable<MeasurementViewOld> measurementViewAddedObservableOld = JavaFxObservable.additionsOf(measurementsViewsOld);
@@ -107,8 +107,8 @@ public class ImagePanelController {
 					case POLYGON :
 						PolygonMeasurement polygonMeasurement = (PolygonMeasurement) measurement;
 
-						PolygonMeasurementView2 polygonMeasurementView = new PolygonMeasurementView2(polygonMeasurement);
-						PolygonMeasurmentController polygonMeasurmentController = new PolygonMeasurmentController(polygonMeasurementView);
+						PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView();
+						PolygonMeasurmentController polygonMeasurmentController = new PolygonMeasurmentController(polygonMeasurementView, polygonMeasurement);
 
 //						PolygonMeasurementViewOld polygonMeasurementViewOld = new PolygonMeasurementViewOld(measurement);
 //						PolygonMeasurmentController polygonMeasurmentController = new PolygonMeasurmentController(polygonMeasurementViewOld, polygonMeasurement);

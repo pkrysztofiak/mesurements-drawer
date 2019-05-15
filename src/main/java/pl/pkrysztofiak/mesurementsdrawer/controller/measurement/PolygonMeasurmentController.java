@@ -10,7 +10,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView2;
+import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
 
 public class PolygonMeasurmentController extends MeasurementController implements EventsReceiver {
 
@@ -19,12 +20,12 @@ public class PolygonMeasurmentController extends MeasurementController implement
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
 
-	private final PolygonMeasurementView2 polygonMeasurementView;
+	private final PolygonMeasurementView polygonMeasurementView;
 
-	public PolygonMeasurmentController(PolygonMeasurementView2 polygonMeasurementView) {
+	public PolygonMeasurmentController(PolygonMeasurementView polygonMeasurementView, PolygonMeasurement polygonMeasurement) {
 		this.polygonMeasurementView = polygonMeasurementView;
 		initSubscriptons();
-		Bindings.bindContentBidirectional(points, polygonMeasurementView.getPolygonMeasurement().getPoints());
+		Bindings.bindContentBidirectional(points, polygonMeasurement.getPoints());
 	}
 
 //	public PolygonMeasurmentController(PolygonMeasurementViewOld polygonMeasurementViewOld, PolygonMeasurement polygonMeasurement) {
