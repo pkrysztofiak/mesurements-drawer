@@ -17,7 +17,6 @@ public class CirclePointView extends PointView {
 
 	private final Circle circle = new Circle(8., paint);
 	private final Observable<Boolean> hoverObservable = JavaFxObservable.valuesOf(circle.hoverProperty());
-	private final Observable<MouseEvent> mouseReleasedObservable = JavaFxObservable.eventsOf(circle, MouseEvent.MOUSE_RELEASED).doOnNext(MouseEvent::consume);
 
 	{
 		getChildren().add(circle);
@@ -42,7 +41,7 @@ public class CirclePointView extends PointView {
 	}
 
 	@Override
-	public Observable<MouseEvent> mouseReleasedObservable() {
-		return mouseReleasedObservable;
+	protected void onMouseClicked(MouseEvent mouseEvent) {
+		mouseEvent.consume();
 	}
 }

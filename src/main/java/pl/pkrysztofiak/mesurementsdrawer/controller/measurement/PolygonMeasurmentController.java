@@ -24,6 +24,8 @@ public class PolygonMeasurmentController extends MeasurementController implement
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
 
 	private final Observable<ObservableList<Point>> pointsObservable = JavaFxObservable.emitOnChanged(points);
+	private final Observable<Point> pointObservable = pointsObservable.switchMap(Observable::fromIterable);
+	private final Observable<Integer> pointIndexObservable = pointObservable.map(points::indexOf);
 
 	private final PolygonMeasurementView polygonMeasurementView;
 
@@ -35,7 +37,7 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private void initSubscriptons() {
 		pointAddedObservable.subscribe(behaviour::onPointAdded);
-
+		Observable.zip(pointObservable, pointIndexObservable, behaviour::onChanged).subscribe();
 	}
 
 	@Override
@@ -45,11 +47,26 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private class Behaviour {
 
-		private void onPointsChagned(ObservableList<Point> points) {
+		private Optional<Void> onChanged(Point point, Integer index) {
 
+			return Optional.empty();
+		}
+
+		private void onPointsChagned(ObservableList<Point> points) {
 		}
 
 		private void onPointAdded(Point point) {
+			initPoint(point);
+
+//			point.previousPointObservable().filter(Optional.empty()::equals).subscribe(empty -> )
+
+			CirclePointView pointView = new CirclePointView(point);
+			polygonMeasurementView.addPointView(pointView);
+
+			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(behaviour::onNexPointSet);
+		}
+
+		private void initPoint(Point point) {
 			ListIterator<Point> listIterator = points.listIterator(points.indexOf(point));
 
 			if (listIterator.hasPrevious()) {
@@ -60,10 +77,6 @@ public class PolygonMeasurmentController extends MeasurementController implement
 			if (listIterator.hasNext()) {
 				point.setNextPoint(points.get(listIterator.nextIndex()));
 			}
-			CirclePointView pointView = new CirclePointView(point);
-			polygonMeasurementView.addPointView(pointView);
-
-			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(behaviour::onNexPointSet);
 		}
 
 		private void onNexPointSet(Point nextPoint) {

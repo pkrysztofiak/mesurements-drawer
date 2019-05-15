@@ -13,6 +13,7 @@ public class ImagePanelView extends StackPane {
     private final Observable<MouseEvent> mousePressedObservable = JavaFxObservable.eventsOf(this, MouseEvent.MOUSE_PRESSED);
     private final Observable<MouseEvent> mouseDraggedObservable = JavaFxObservable.eventsOf(this, MouseEvent.MOUSE_DRAGGED);
     private final Observable<MouseEvent> mouseReleasedObservable = JavaFxObservable.eventsOf(this, MouseEvent.MOUSE_RELEASED);
+    private final Observable<MouseEvent> mouseClickedObservable = JavaFxObservable.eventsOf(this, MouseEvent.MOUSE_CLICKED);
 
     private final PublishSubject<MouseEvent> mouseAnyPublishable = PublishSubject.create();
 
