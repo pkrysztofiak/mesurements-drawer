@@ -39,7 +39,8 @@ public class PanelController {
 
 		//new
 		toolbarController.newMeasurementCreatedObservable().subscribe(imagePanelController::addMeasurement);
-		imagePanelController.measurementFinishedObservable().subscribe(behaviour::onMeasurementFinished);
+		//TODO fix it
+//		imagePanelController.measurementFinishedObservable().subscribe(behaviour::onMeasurementFinished);
 
 	}
 

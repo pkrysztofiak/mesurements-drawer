@@ -14,7 +14,6 @@ import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementViewOld;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanelView;
 
@@ -35,8 +34,8 @@ public class ImagePanelController {
     private final ObservableList<MeasurementView> measurementsViews = FXCollections.observableArrayList();
     private final Observable<MeasurementView> measurementViewAddedObservable = JavaFxObservable.additionsOf(measurementsViews);
 
-    private final ObservableList<MeasurementViewOld> measurementsViewsOld = FXCollections.observableArrayList();
-    private final Observable<MeasurementViewOld> measurementViewAddedObservableOld = JavaFxObservable.additionsOf(measurementsViewsOld);
+//    private final ObservableList<MeasurementViewOld> measurementsViewsOld = FXCollections.observableArrayList();
+//    private final Observable<MeasurementViewOld> measurementViewAddedObservableOld = JavaFxObservable.additionsOf(measurementsViewsOld);
 
     private final ObjectProperty<EventsReceiver> eventsReceiverPropety = new SimpleObjectProperty<>();
     private final Observable<EventsReceiver> eventsReceiverObservable = JavaFxObservable.valuesOf(eventsReceiverPropety);
@@ -83,9 +82,9 @@ public class ImagePanelController {
         return this != imagePanelController;
     }
 
-    public ObservableList<MeasurementViewOld> getMeasurements() {
-        return measurementsViewsOld;
-    }
+//    public ObservableList<MeasurementViewOld> getMeasurements() {
+//        return measurementsViewsOld;
+//    }
 
     public int getId() {
         return id;
@@ -96,8 +95,9 @@ public class ImagePanelController {
     }
 
     public Observable<Measurement> measurementFinishedObservable() {
+    	return null;
     	//TODO do poprawinia
-    	return measurementViewAddedObservableOld.flatMap(MeasurementViewOld::finishedObservable).map(MeasurementViewOld::getMeasurement);
+//    	return measurementViewAddedObservableOld.flatMap(MeasurementViewOld::finishedObservable).map(MeasurementViewOld::getMeasurement);
     }
 
     private class Behaviour {
@@ -133,7 +133,8 @@ public class ImagePanelController {
     	}
 
     	private boolean measurementExists(Measurement measurement) {
-    		return measurementsViewsOld.stream().map(MeasurementViewOld::getMeasurement).map(Measurement::getId).anyMatch(measurement.getId()::equals);
+    		return false;
+//    		return measurementsViewsOld.stream().map(MeasurementViewOld::getMeasurement).map(Measurement::getId).anyMatch(measurement.getId()::equals);
     	}
 
     }

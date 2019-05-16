@@ -5,7 +5,6 @@ import pl.pkrysztofiak.mesurementsdrawer.controller.tool.Tool;
 import pl.pkrysztofiak.mesurementsdrawer.controller.tool.ToolController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementViewOld;
 import pl.pkrysztofiak.mesurementsdrawer.view.toolbar.ToolbarView;
 
 public class ToolbarController {
@@ -21,9 +20,9 @@ public class ToolbarController {
 		return toolController.selectedToolObservable();
 	}
 
-	public Observable<MeasurementViewOld> newMeasurementViewCreatedObservable() {
-		return toolController.newMeasurementViewCreatedObservable();
-	}
+//	public Observable<MeasurementViewOld> newMeasurementViewCreatedObservable() {
+//		return toolController.newMeasurementViewCreatedObservable();
+//	}
 
 	public Observable<Measurement> newMeasurementCreatedObservable() {
 		return toolController.newMeasurementCreatedObservable();
