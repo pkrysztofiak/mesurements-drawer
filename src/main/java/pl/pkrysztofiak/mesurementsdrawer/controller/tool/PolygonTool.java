@@ -10,10 +10,15 @@ public class PolygonTool extends Tool {
 
     @Override
     public void onMouseReleased(MouseEvent mouseEvent) {
-        behaviour.onMouseReleased(mouseEvent);
+//        behaviour.onMouseReleased(mouseEvent);
     }
 
     @Override
+	public void onMouseClicked(MouseEvent mouseEvent) {
+    	behaviour.onMouseClicked(mouseEvent);
+	}
+
+	@Override
     public ToolType getType() {
     	return ToolType.POLYGON;
     }
@@ -26,10 +31,11 @@ public class PolygonTool extends Tool {
     private class Behaviour {
 
         private void onMouseReleased(MouseEvent mouseEvent) {
-        	newMeasurementCreatedPublishable.onNext(new PolygonMeasurement(new Point(mouseEvent.getX(), mouseEvent.getY())));
+//        	newMeasurementCreatedPublishable.onNext(new PolygonMeasurement(new Point(mouseEvent.getX(), mouseEvent.getY())));
+        }
 
-//            PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView();
-//            newMeasurementViewCreatedPubslishable.onNext(polygonMeasurementView);
+        private void onMouseClicked(MouseEvent mouseEvent) {
+        	newMeasurementCreatedPublishable.onNext(new PolygonMeasurement(new Point(mouseEvent.getX(), mouseEvent.getY())));
         }
     }
 }

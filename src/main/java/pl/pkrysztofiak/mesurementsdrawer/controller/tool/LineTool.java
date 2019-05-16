@@ -13,4 +13,9 @@ public class LineTool extends Tool {
 	public ToolType getType() {
 		return null;
 	}
+
+	@Override
+	public void onMouseClicked(MouseEvent mouseEvent) {
+
+	}
 }

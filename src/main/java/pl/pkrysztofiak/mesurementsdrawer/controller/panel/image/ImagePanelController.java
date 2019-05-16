@@ -50,7 +50,8 @@ public class ImagePanelController {
     }
 
     private void initSubscriptions() {
-        eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
+//        eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
+        eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseClickedObservable().doOnNext(eventsReceiver::mouseClicked)).subscribe();
         measurementAddedObservable.subscribe(behaviour::addMeasurement);
     }
 

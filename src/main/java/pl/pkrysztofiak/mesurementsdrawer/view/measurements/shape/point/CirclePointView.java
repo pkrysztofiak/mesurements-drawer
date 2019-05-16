@@ -1,7 +1,5 @@
 package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point;
 
-import java.util.Optional;
-
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import javafx.beans.property.ObjectProperty;
@@ -44,6 +42,10 @@ public class CirclePointView extends PointView {
 		mouseClickedObservable.subscribe(behaviour::onMouseClicked);
 	}
 
+	public Observable<MouseEvent> mouseClickedObservable() {
+		return mouseClickedObservable;
+	}
+
 	public void setMouseClickedHandler(MouseClickedHandler<Point> mouseClickedHandler) {
 		mouseClickedHandlerProperty.set(mouseClickedHandler);
 	}
@@ -55,7 +57,9 @@ public class CirclePointView extends PointView {
 		}
 
 		public void onMouseClicked(MouseEvent mouseEvent) {
-			Optional.ofNullable(mouseClickedHandlerProperty.get()).ifPresent(mouseClickedHandler -> mouseClickedHandler.onMouseClicked(point, mouseEvent));
+			System.out.println("inner click!");
+			mouseEvent.consume();
+//			Optional.ofNullable(mouseClickedHandlerProperty.get()).ifPresent(mouseClickedHandler -> mouseClickedHandler.onMouseClicked(point, mouseEvent));
 		}
 	}
 }

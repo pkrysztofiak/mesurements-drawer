@@ -37,6 +37,10 @@ public class ImagePanelView extends StackPane {
         return mouseReleasedObservable;
     }
 
+    public Observable<MouseEvent> mouseClickedObservable() {
+    	return mouseClickedObservable;
+    }
+
     public Observable<MouseEvent> mouseAnyObservable() {
         return mouseAnyPublishable;
     }

@@ -1,10 +1,12 @@
 package pl.pkrysztofiak.mesurementsdrawer.controller.measurement;
 
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
+import io.reactivex.subjects.PublishSubject;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +24,10 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
+	private final Observable<Integer> pointsSizeObservable = JavaFxObservable.emitOnChanged(points).map(List::size);
+
+	private final PublishSubject<CirclePointView> firstPointViewPubslishable = PublishSubject.create();
+	private final PublishSubject<CirclePointView> lastPointViewPubslishable = PublishSubject.create();
 
 	private final PolygonMeasurementView polygonMeasurementView;
 
@@ -29,10 +35,12 @@ public class PolygonMeasurmentController extends MeasurementController implement
 		this.polygonMeasurementView = polygonMeasurementView;
 		initSubscriptons();
 		Bindings.bindContentBidirectional(points, polygonMeasurement.getPoints());
+
 	}
 
 	private void initSubscriptons() {
 		pointAddedObservable.subscribe(behaviour::onPointAdded);
+		Observable.combineLatest(firstPointViewPubslishable.switchMap(pointView -> pointView.mouseClickedObservable().map(mouseClicked -> pointView)), lastPointViewPubslishable, behaviour::onFinished).subscribe();
 	}
 
 	@Override
@@ -40,10 +48,13 @@ public class PolygonMeasurmentController extends MeasurementController implement
 		points.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
 	}
 
-	private class Behaviour {
+	@Override
+	public void onMouseClicked(MouseEvent mouseEvent) {
+		System.out.println("onMouseClicked!");
+		points.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
+	}
 
-		private void onPointsChagned(ObservableList<Point> points) {
-		}
+	private class Behaviour {
 
 		private void onPointAdded(Point point) {
 			initPoint(point);
@@ -51,14 +62,44 @@ public class PolygonMeasurmentController extends MeasurementController implement
 			CirclePointView pointView = new CirclePointView(point);
 			polygonMeasurementView.addPointView(pointView);
 
-			Observable<CirclePointView> firstPointViewObservable = point.previousPointObservable().filter(Optional.empty()::equals).map(emptyPrevious -> pointView).filter(poitView -> points.size() > 2);
-			Observable<CirclePointView> lastPointViewObservable = point.nextPointObservable().filter(Optional.empty()::equals).map(emptyNext -> pointView).filter(poitView -> points.size() > 2);
+			point.previousPointObservable().filter(Optional.empty()::equals).subscribe(previousEmpty -> firstPointViewPubslishable.onNext(pointView));
+			point.nextPointObservable().filter(Optional.empty()::equals).subscribe(nextEmpty -> lastPointViewPubslishable.onNext(pointView));
+
+//			Observable<CirclePointView> firstPointViewObservable = point.previousPointObservable().filter(Optional.empty()::equals).map(emptyPrevious -> pointView);
+//			Observable<CirclePointView> lastPointViewObservable = point.nextPointObservable().filter(Optional.empty()::equals).map(emptyNext -> pointView);
+
+//			Observable.combineLatest(firstPointViewObservable, pointsSizeObservable, combiner)
+
+//			firstPointViewObservable.switchMap(firstPointView -> firstPointView.mouseClickedObservable().map(mouseClicked -> firstPointView)).withLatestFrom(lastPointViewObservable, behaviour::onFinished).subscribe();
+
+//			Observable.combineLatest(firstPointViewObservable.switchMap(firstPoint -> firstPoint.mouseClickedObservable().map(mouseClicked -> firstPoint)), lastPointViewObservable, behaviour::onFinished).subscribe();
+
+//			Observable.combineLatest(source1, source2, combiner)
 
 
+//			firstPointViewObservable.subscribe(firstPoint -> System.out.println("firstPoint=" + firstPoint.getPoint()));
+//			lastPointViewObservable.subscribe(lastPoint -> System.out.println("lastPoint=" + lastPoint.getPoint()));
+
+//			firstPointViewObservable.switchMap(CirclePointView::mouseClickedObservable).subscribe(mouseEvent -> System.out.println("MOUSE_CLICKED"));
+
+//			firstPointViewObservable
+//			.switchMap(circlePointView ->
+//				circlePointView.mouseClickedObservable()
+//				.doOnNext(next -> System.out.println("first point clicked!"))
+//				.doOnNext(MouseEvent::consume)
+//				.map(mouseClicked -> circlePointView))
+//			.withLatestFrom(lastPointViewObservable, behaviour::onFinished).subscribe();
 
 //			point.previousPointObservable().filter(Optional.empty()::equals).filter(empty -> )
 
 			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(behaviour::onNexPointSet);
+		}
+
+		private Optional<Void> onFinished(CirclePointView firstCirclePointView, CirclePointView lastCirclePointView) {
+			System.out.println("onFinished");
+			LineView lineView = new LineView(firstCirclePointView.getPoint(), lastCirclePointView.getPoint());
+			polygonMeasurementView.addLineView(lineView);
+			return Optional.empty();
 		}
 
 		private void initPoint(Point point) {
