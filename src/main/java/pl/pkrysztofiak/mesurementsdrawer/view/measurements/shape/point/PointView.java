@@ -9,6 +9,7 @@ public abstract class PointView extends ShapeView {
 	protected final Point point;
 
 	public PointView(Point point) {
+		super();
 		this.point = point;
 	}
 

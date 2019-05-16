@@ -23,10 +23,6 @@ public class PolygonMeasurmentController extends MeasurementController implement
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
 
-	private final Observable<ObservableList<Point>> pointsObservable = JavaFxObservable.emitOnChanged(points);
-	private final Observable<Point> pointObservable = pointsObservable.switchMap(Observable::fromIterable);
-	private final Observable<Integer> pointIndexObservable = pointObservable.map(points::indexOf);
-
 	private final PolygonMeasurementView polygonMeasurementView;
 
 	public PolygonMeasurmentController(PolygonMeasurementView polygonMeasurementView, PolygonMeasurement polygonMeasurement) {
@@ -37,7 +33,6 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private void initSubscriptons() {
 		pointAddedObservable.subscribe(behaviour::onPointAdded);
-		Observable.zip(pointObservable, pointIndexObservable, behaviour::onChanged).subscribe();
 	}
 
 	@Override
@@ -47,21 +42,21 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private class Behaviour {
 
-		private Optional<Void> onChanged(Point point, Integer index) {
-
-			return Optional.empty();
-		}
-
 		private void onPointsChagned(ObservableList<Point> points) {
 		}
 
 		private void onPointAdded(Point point) {
 			initPoint(point);
 
-//			point.previousPointObservable().filter(Optional.empty()::equals).subscribe(empty -> )
-
 			CirclePointView pointView = new CirclePointView(point);
 			polygonMeasurementView.addPointView(pointView);
+
+			Observable<CirclePointView> firstPointViewObservable = point.previousPointObservable().filter(Optional.empty()::equals).map(emptyPrevious -> pointView).filter(poitView -> points.size() > 2);
+			Observable<CirclePointView> lastPointViewObservable = point.nextPointObservable().filter(Optional.empty()::equals).map(emptyNext -> pointView).filter(poitView -> points.size() > 2);
+
+
+
+//			point.previousPointObservable().filter(Optional.empty()::equals).filter(empty -> )
 
 			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(behaviour::onNexPointSet);
 		}

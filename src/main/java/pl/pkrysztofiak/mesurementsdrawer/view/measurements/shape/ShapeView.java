@@ -1,17 +1,21 @@
 package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape;
 
-import io.reactivex.Observable;
-import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
 
 public abstract class ShapeView extends Group {
 
-	private final Observable<MouseEvent> mouseClickedObservable = JavaFxObservable.eventsOf(this, MouseEvent.MOUSE_CLICKED);
+//	private final ObjectProperty<MouseClickedHandler> mouseClickedHandlerProperty = new SimpleObjectProperty<>();
+//	private final Observable<MouseClickedHandler> mouseClickedHandlerObservable = JavaFxObservable.valuesOf(mouseClickedHandlerProperty);
+
+//	private final Observable<MouseEvent> mouseClickedObservable = JavaFxObservable.eventsOf(this, MouseEvent.MOUSE_CLICKED);
 
 	public ShapeView() {
-		mouseClickedObservable.subscribe(this::onMouseClicked);
+//		mouseClickedHandlerObservable.switchMap(mouseClickedHandler -> mouseClickedObservable.doOnNext(mouseClickedHandler::onMouseClicked)).subscribe();
 	}
 
-	protected abstract void onMouseClicked(MouseEvent mouseEvent);
+//	protected void setMouseClickedHandler(MouseClickedHandler mouseClickedHandler) {
+//		mouseClickedHandlerProperty.set(mouseClickedHandler);
+//	}
+
+//	public abstract void onMouseClicked(MouseEvent mouseEvent);
 }
