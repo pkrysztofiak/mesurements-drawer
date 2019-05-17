@@ -14,5 +14,4 @@ public interface EventsReceiver {
     default void mouseClicked(MouseEvent mouseEvent) {
     	onMouseClicked(mouseEvent);
     }
-
 }

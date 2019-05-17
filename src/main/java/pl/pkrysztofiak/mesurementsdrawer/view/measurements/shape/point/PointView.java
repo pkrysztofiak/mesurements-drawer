@@ -1,5 +1,7 @@
 package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point;
 
+import io.reactivex.Observable;
+import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.ShapeView;
 
@@ -17,4 +19,5 @@ public abstract class PointView extends ShapeView {
 		return point;
 	}
 
+	public abstract Observable<MouseEvent> mouseClickedObservable();
 }
