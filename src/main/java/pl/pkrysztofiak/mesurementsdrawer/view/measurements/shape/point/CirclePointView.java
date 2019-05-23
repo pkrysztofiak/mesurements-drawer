@@ -8,7 +8,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 
-public class CirclePointView extends PointView {
+public class CirclePointView extends VertexView {
 
 	private final Behaviour behaviour = new Behaviour();
 
@@ -19,13 +19,17 @@ public class CirclePointView extends PointView {
 	private final Observable<Boolean> hoverObservable = JavaFxObservable.valuesOf(circle.hoverProperty());
 	private final Observable<MouseEvent> circlemouseClickedObservable = JavaFxObservable.eventsOf(circle, MouseEvent.MOUSE_CLICKED);
 
+
+
 	public CirclePointView(Point point) {
 		super(point);
 		circle.layoutXProperty().bindBidirectional(point.layoutXProperty());
 		circle.layoutYProperty().bindBidirectional(point.layoutYProperty());
 		initSubscriptions();
 		getChildren().add(circle);
+
 	}
+
 
 	private void initSubscriptions() {
 		hoverObservable.subscribe(behaviour::onHover);

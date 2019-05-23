@@ -18,30 +18,26 @@ import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.CirclePointView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.PointView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexView;
 
 public class PolygonMeasurmentController extends MeasurementController implements EventsReceiver {
 
 	private final Behaviour behaviour = new Behaviour();
 
+	private final PolygonMeasurementView polygonMeasurementView;
+
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
 	private final Observable<Integer> pointsSizeObservable = JavaFxObservable.emitOnChanged(points).map(List::size);
 
-	private final ObjectProperty<PointView> firstPointViewProperty = new SimpleObjectProperty<>();
-	private final Observable<PointView> firstPointViewObservale = JavaFxObservable.valuesOf(firstPointViewProperty);
-	private final Observable<MouseEvent> firstPointViewMouseClickedObservable = firstPointViewObservale.switchMap(PointView::mouseClickedObservable);
+	private final ObjectProperty<VertexView> firstPointViewProperty = new SimpleObjectProperty<>();
+	private final Observable<VertexView> firstPointViewObservale = JavaFxObservable.valuesOf(firstPointViewProperty);
+	private final Observable<MouseEvent> firstPointViewMouseClickedObservable = firstPointViewObservale.switchMap(VertexView::mouseClickedObservable);
 
-	private final ObjectProperty<PointView> lastPointViewProperty = new SimpleObjectProperty<>();
-	private final Observable<PointView> lastPointViewObservable = JavaFxObservable.valuesOf(lastPointViewProperty);
+	private final ObjectProperty<VertexView> lastPointViewProperty = new SimpleObjectProperty<>();
+	private final Observable<VertexView> lastPointViewObservable = JavaFxObservable.valuesOf(lastPointViewProperty);
 
-//	private final PublishSubject<PointView> firstPointViewPubslishable = PublishSubject.create();
-//	private final PublishSubject<PointView> lastPointViewPubslishable = PublishSubject.create();
-
-//	private final Observable<PointView> firstPointViewClickedObservable = firstPointViewPubslishable.switchMap(firstPointView -> firstPointView.mouseClickedObservable().map(mouseEvent -> firstPointView));
-
-	private final PolygonMeasurementView polygonMeasurementView;
+	private final ObservableList<PolygonMeasurementVertexController> verticesControllers = FXCollections.observableArrayList();
 
 	public PolygonMeasurmentController(PolygonMeasurementView polygonMeasurementView, PolygonMeasurement polygonMeasurement) {
 		this.polygonMeasurementView = polygonMeasurementView;
@@ -74,23 +70,24 @@ public class PolygonMeasurmentController extends MeasurementController implement
 		private void onPointAdded(Point point) {
 			initPoint(point);
 
-			CirclePointView pointView = new CirclePointView(point);
-			polygonMeasurementView.addPointView(pointView);
+			PolygonMeasurementVertexController vertexController = new PolygonMeasurementVertexController(point);
 
-			point.previousPointObservable().filter(Optional.empty()::equals).subscribe(previousPointEmpty -> firstPointViewProperty.set(pointView));
-			point.nextPointObservable().filter(Optional.empty()::equals).subscribe(previousPointEmpty -> lastPointViewProperty.set(pointView));
+			vertexController.vertexViewObservable().subscribe(polygonMeasurementView::addVertexView);
+			verticesControllers.add(vertexController);
 
-//			Observable<PointView> firstPointViewObservable = point.previousPointObservable().filter(Optional.empty()::equals).map(previousPointEmpty -> pointView);
-//			Observable<PointView> lastPointViewObservable = point.nextPointObservable().filter(Optional.empty()::equals).map(nextPointEmpty -> pointView);
-//
-//			firstPointViewObservable.subscribe(firstPointViewPubslishable::onNext);
-//			lastPointViewObservable.subscribe(lastPointViewPubslishable::onNext);
+			vertexController.mouseClickedObservable().subscribe(this::onVertexClicked);
 
-			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(behaviour::onNexPointSet);
+			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(nextPoint -> behaviour.addEdge(point, nextPoint));
 		}
 
-		private Optional<Void> onFinished(PointView firstPointView, PointView lastPointView) {
-			System.out.println("on finished");
+		private void onVertexClicked(Point point) {
+			System.out.println("clicked");
+			if ((points.size() > 2) && !point.hasPrevious()) {
+				point.setPreviousPoint(points.get(points.size() - 1));
+			}
+		}
+
+		private Optional<Void> onFinished(VertexView firstPointView, VertexView lastPointView) {
 			LineView lineView = new LineView(firstPointView.getPoint(), lastPointView.getPoint());
 			polygonMeasurementView.addLineView(lineView);
 			return Optional.empty();
@@ -109,8 +106,8 @@ public class PolygonMeasurmentController extends MeasurementController implement
 			}
 		}
 
-		private void onNexPointSet(Point nextPoint) {
-			LineView lineView = new LineView(nextPoint.getPreviousPoint().get(), nextPoint);
+		private void addEdge (Point startPoint, Point endPoint) {
+			LineView lineView = new LineView(startPoint, endPoint);
 			polygonMeasurementView.addLineView(lineView);
 		}
 	}

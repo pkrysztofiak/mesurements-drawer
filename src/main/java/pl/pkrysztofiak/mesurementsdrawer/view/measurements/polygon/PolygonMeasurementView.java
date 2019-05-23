@@ -5,18 +5,14 @@ import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.ConnectorView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.CirclePointView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.PointView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexView;
 
 public class PolygonMeasurementView extends MeasurementView {
 
 	private final Behaviour behaviour = new Behaviour();
 
-	public void addPoint(Point point) {
-		behaviour.addPoint(point);
-	}
-
-	public void addPointView(PointView pointView) {
-		getChildren().add(pointView);
+	public void addVertexView(VertexView vertexView) {
+		getChildren().add(vertexView);
 	}
 
 	public void addLineView(LineView lineView) {
@@ -30,8 +26,8 @@ public class PolygonMeasurementView extends MeasurementView {
 	private class Behaviour {
 
 		private void addPoint(Point point) {
-			PointView pointView = new CirclePointView(point);
-			getChildren().add(pointView);
+			VertexView vertexView = new CirclePointView(point);
+			getChildren().add(vertexView);
 		}
 	}
 }

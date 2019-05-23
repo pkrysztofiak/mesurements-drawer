@@ -123,6 +123,14 @@ public class Point {
     	});
     }
 
+    public boolean hasPrevious() {
+    	return previousPointProperty.get().map(previousPoint -> true).orElse(false);
+    }
+
+    public boolean hasNext() {
+    	return nextPointProperty.get().map(nextPoint -> true).orElse(false);
+    }
+
 	@Override
 	public String toString() {
 		return "Point[x=" + layoutXProperty.get() + ", y=" + layoutYProperty.get() + ", previous=" + getPreviousPoint().map(point -> "Point[x" + point.getLayoutX() + ", y=" + point.getLayoutY() + "]").orElse("none") + ", next=" + getNextPoint().map(point -> "Point[x" + point.getLayoutX() + ", y=" + point.getLayoutY() + "]").orElse("none") + "]";
