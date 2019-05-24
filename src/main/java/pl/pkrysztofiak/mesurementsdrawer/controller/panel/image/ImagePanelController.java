@@ -9,7 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
-import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.PolygonMeasurmentController;
+import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.polygon.PolygonMeasurmentController;
 import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;

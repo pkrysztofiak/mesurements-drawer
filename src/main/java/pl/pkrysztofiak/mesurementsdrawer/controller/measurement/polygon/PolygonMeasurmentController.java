@@ -1,4 +1,4 @@
-package pl.pkrysztofiak.mesurementsdrawer.controller.measurement;
+package pl.pkrysztofiak.mesurementsdrawer.controller.measurement.polygon;
 
 import java.util.ListIterator;
 import java.util.Optional;
@@ -12,6 +12,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
+import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.EdgeController;
+import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.MeasurementController;
+import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.VertexController;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
@@ -45,7 +48,6 @@ public class PolygonMeasurmentController extends MeasurementController implement
 	@Override
 	public void onMouseClicked(MouseEvent mouseEvent) {
 		Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
-
 		points.add(point);
 	}
 
