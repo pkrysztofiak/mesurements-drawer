@@ -7,6 +7,7 @@ import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Change;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.CirclePointView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexView;
@@ -42,8 +43,8 @@ public class VertexController {
 		return vertexViewChangeObservable;
 	}
 
-	public Observable<Point> mouseClickedObservable() {
-		return vertexViewObservable.switchMap(VertexView::mouseClickedObservable).map(mouseEvent -> point);
+	public Observable<MouseEvent> mouseClickedObservable() {
+		return vertexViewObservable.switchMap(VertexView::mouseClickedObservable);
 	}
 
 	public Point getPoint() {

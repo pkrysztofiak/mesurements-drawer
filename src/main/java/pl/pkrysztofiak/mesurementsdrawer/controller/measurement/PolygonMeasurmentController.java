@@ -16,9 +16,6 @@ import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.EdgeView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.MouseClickable;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.MouseClickedHandler;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexView;
 
 public class PolygonMeasurmentController extends MeasurementController implements EventsReceiver {
@@ -52,7 +49,7 @@ public class PolygonMeasurmentController extends MeasurementController implement
 		points.add(point);
 	}
 
-	private class Behaviour implements MouseClickedHandler<Point> {
+	private class Behaviour {
 
 		private void onPointAdded(Point point) {
 			ListIterator<Point> listIterator = points.listIterator(points.indexOf(point));
@@ -64,6 +61,8 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 			vertexController.vertexViewObservable().subscribe(behaviour::onVertexViewInitialized);
 			vertexController.vertexViewChangeObservable().subscribe(behaviour::onVertexViewChanged);
+			vertexController.mouseClickedObservable().map(mouseEvent -> vertexController).subscribe(behaviour::onMouseClicked);
+			
 
 			if (point.hasPrevious()) {
 				EdgeController edgeController = new EdgeController(point.getPreviousPoint().get(), point);
@@ -93,49 +92,13 @@ public class PolygonMeasurmentController extends MeasurementController implement
 		private void onEdgeViewInitialized(EdgeView edgeView) {
 			polygonMeasurementView.getEdgesChildren().add(edgeView);
 		}
-
-		private void onVertexViewChanged(VertexView vertexView) {
-//			polygonMeasurementView.addVertexView(vertexView);
-		}
-
-		private void onMouseClicked(MouseClickable<Point> mouseClickable) {
-		}
-
-
-		private void onVertexClicked(Point point) {
-			System.out.println("clicked");
-			if ((points.size() > 2) && !point.hasPrevious()) {
-				point.setPreviousPoint(points.get(points.size() - 1));
-			}
-		}
-
-		private Optional<Void> onFinished(VertexView firstPointView, VertexView lastPointView) {
-			LineView lineView = new LineView(firstPointView.getPoint(), lastPointView.getPoint());
-//			polygonMeasurementView.addLineView(lineView);
-			return Optional.empty();
-		}
-
-		private void initPoint(Point point) {
-			ListIterator<Point> listIterator = points.listIterator(points.indexOf(point));
-
-			if (listIterator.hasPrevious()) {
-				point.setPreviousPoint(points.get(listIterator.previousIndex()));
-			}
-
-			listIterator.next();
-			if (listIterator.hasNext()) {
-				point.setNextPoint(points.get(listIterator.nextIndex()));
-			}
-		}
-
-		private void addEdge (Point startPoint, Point endPoint) {
-			LineView lineView = new LineView(startPoint, endPoint);
-//			polygonMeasurementView.addLineView(lineView);
-		}
-
-		@Override
-		public void mouseClicked(Point point) {
-
+		
+		private void onMouseClicked(VertexController vertexController) {
+		    Point mouseClickedPoint = vertexController.getPoint();
+            if (points.size() > 2 && !mouseClickedPoint.hasPrevious()) {
+                EdgeController edgeController = new EdgeController(points.get(points.size() - 1), mouseClickedPoint);
+                edgeController.edgeViewObservable().subscribe(behaviour::onEdgeViewInitialized);
+		    }
 		}
 	}
 }
