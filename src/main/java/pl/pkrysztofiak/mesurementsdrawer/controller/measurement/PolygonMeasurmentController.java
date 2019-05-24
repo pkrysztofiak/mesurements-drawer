@@ -1,23 +1,24 @@
 package pl.pkrysztofiak.mesurementsdrawer.controller.measurement;
 
-import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Predicate;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
+import io.reactivex.rxjavafx.sources.Change;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineEdgeView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.MouseClickable;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.MouseClickedHandler;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexView;
 
 public class PolygonMeasurmentController extends MeasurementController implements EventsReceiver {
@@ -28,16 +29,6 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
-	private final Observable<Integer> pointsSizeObservable = JavaFxObservable.emitOnChanged(points).map(List::size);
-
-	private final ObjectProperty<VertexView> firstPointViewProperty = new SimpleObjectProperty<>();
-	private final Observable<VertexView> firstPointViewObservale = JavaFxObservable.valuesOf(firstPointViewProperty);
-	private final Observable<MouseEvent> firstPointViewMouseClickedObservable = firstPointViewObservale.switchMap(VertexView::mouseClickedObservable);
-
-	private final ObjectProperty<VertexView> lastPointViewProperty = new SimpleObjectProperty<>();
-	private final Observable<VertexView> lastPointViewObservable = JavaFxObservable.valuesOf(lastPointViewProperty);
-
-	private final ObservableList<PolygonMeasurementVertexController> verticesControllers = FXCollections.observableArrayList();
 
 	public PolygonMeasurmentController(PolygonMeasurementView polygonMeasurementView, PolygonMeasurement polygonMeasurement) {
 		this.polygonMeasurementView = polygonMeasurementView;
@@ -48,11 +39,11 @@ public class PolygonMeasurmentController extends MeasurementController implement
 	private void initSubscriptons() {
 		pointAddedObservable.subscribe(behaviour::onPointAdded);
 
-		Predicate<Integer> predicate = size -> size > 2;
-		pointsSizeObservable.filter(predicate)
-		.switchMap(size -> firstPointViewMouseClickedObservable)
-		.switchMap(mouseClicked -> Observable.combineLatest(firstPointViewObservale, lastPointViewObservable, behaviour::onFinished))
-		.subscribe();
+//		Predicate<Integer> predicate = size -> size > 2;
+//		pointsSizeObservable.filter(predicate)
+//		.switchMap(size -> firstPointViewMouseClickedObservable)
+//		.switchMap(mouseClicked -> Observable.combineLatest(firstPointViewObservale, lastPointViewObservable, behaviour::onFinished))
+//		.subscribe();
 	}
 
 	@Override
@@ -62,23 +53,58 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	@Override
 	public void onMouseClicked(MouseEvent mouseEvent) {
-		points.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
+		Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
+
+
+		points.add(point);
 	}
 
-	private class Behaviour {
+	private class Behaviour implements MouseClickedHandler<Point> {
 
 		private void onPointAdded(Point point) {
-			initPoint(point);
 
-			PolygonMeasurementVertexController vertexController = new PolygonMeasurementVertexController(point);
+			ListIterator<Point> listIterator = points.listIterator(points.indexOf(point));
+			if (listIterator.hasPrevious()) {
+				point.setPreviousPoint(listIterator.previous());
+			}
 
-			vertexController.vertexViewObservable().subscribe(polygonMeasurementView::addVertexView);
-			verticesControllers.add(vertexController);
+			VertexController vertexController = new VertexController(point);
 
-			vertexController.mouseClickedObservable().subscribe(this::onVertexClicked);
+			vertexController.vertexViewObservable().subscribe(behaviour::onVertexViewInitialized);
+			vertexController.vertexViewChangeObservable().subscribe(behaviour::onVertexViewChanged);
 
-			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(nextPoint -> behaviour.addEdge(point, nextPoint));
+			if (point.hasPrevious()) {
+				LineEdgeView lineEdgeView = new LineEdgeView(point.getPreviousPoint().get(), point);
+				polygonMeasurementView.getEdgesChildren().add(lineEdgeView);
+			}
 		}
+
+		private void onVertexViewInitialized(VertexView vertexView) {
+			polygonMeasurementView.getVerticesChildren().add(vertexView);
+		}
+
+		private void onVertexViewChanged(Change<Optional<VertexView>> change) {
+			Optional<VertexView> oldVertexViewOptional = change.getOldVal();
+			Optional<VertexView> newVertexViewOptional = change.getNewVal();
+			ObservableList<Node> verticesChildren = polygonMeasurementView.getVerticesChildren();
+			if (oldVertexViewOptional.isPresent() && newVertexViewOptional.isPresent()) {
+				VertexView oldVertexView = oldVertexViewOptional.get();
+				VertexView newVertexView = newVertexViewOptional.get();
+				verticesChildren.set(verticesChildren.indexOf(oldVertexView), newVertexView);
+			} else if (!oldVertexViewOptional.isPresent() && newVertexViewOptional.isPresent()) {
+				verticesChildren.add(newVertexViewOptional.get());
+			} else if (oldVertexViewOptional.isPresent() && !newVertexViewOptional.isPresent()) {
+				verticesChildren.remove(oldVertexViewOptional.get());
+			}
+		}
+
+		private void onVertexViewChanged(VertexView vertexView) {
+//			polygonMeasurementView.addVertexView(vertexView);
+		}
+
+		private void onMouseClicked(MouseClickable<Point> mouseClickable) {
+		}
+
 
 		private void onVertexClicked(Point point) {
 			System.out.println("clicked");
@@ -89,7 +115,7 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 		private Optional<Void> onFinished(VertexView firstPointView, VertexView lastPointView) {
 			LineView lineView = new LineView(firstPointView.getPoint(), lastPointView.getPoint());
-			polygonMeasurementView.addLineView(lineView);
+//			polygonMeasurementView.addLineView(lineView);
 			return Optional.empty();
 		}
 
@@ -108,7 +134,12 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 		private void addEdge (Point startPoint, Point endPoint) {
 			LineView lineView = new LineView(startPoint, endPoint);
-			polygonMeasurementView.addLineView(lineView);
+//			polygonMeasurementView.addLineView(lineView);
+		}
+
+		@Override
+		public void mouseClicked(Point point) {
+
 		}
 	}
 }

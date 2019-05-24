@@ -6,10 +6,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.CirclePointView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.MouseClickable;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexView;
 
-public class PolygonMeasurementVertexController implements MouseClickable<Point> {
+public class PolygonMeasurementVertexController {
 
 	private final Point point;
 
@@ -28,7 +27,6 @@ public class PolygonMeasurementVertexController implements MouseClickable<Point>
 		return vertexViewObservable;
 	}
 
-	@Override
 	public Observable<Point> mouseClickedObservable() {
 		return vertexViewObservable.switchMap(VertexView::mouseClickedObservable).map(mouseClicked -> point);
 	}

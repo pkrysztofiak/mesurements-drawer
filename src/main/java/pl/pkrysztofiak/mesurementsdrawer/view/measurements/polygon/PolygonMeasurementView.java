@@ -1,33 +1,32 @@
 package pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon;
 
-import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.ConnectorView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.CirclePointView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexView;
 
 public class PolygonMeasurementView extends MeasurementView {
 
+	private final Pane verticesPane = new Pane();
+	private final Pane edgesPane = new Pane();
+
 	private final Behaviour behaviour = new Behaviour();
 
-	public void addVertexView(VertexView vertexView) {
-		getChildren().add(vertexView);
+	public PolygonMeasurementView() {
+		verticesPane.setPickOnBounds(false);
+		edgesPane.setPickOnBounds(false);
+		getChildren().addAll(edgesPane, verticesPane);
 	}
 
-	public void addLineView(LineView lineView) {
-		getChildren().add(0, lineView);
+	public ObservableList<Node> getVerticesChildren() {
+		return verticesPane.getChildren();
 	}
 
-	public void addLineView(ConnectorView lineView) {
-		getChildren().add(lineView);
+	public ObservableList<Node> getEdgesChildren() {
+		return edgesPane.getChildren();
 	}
 
 	private class Behaviour {
 
-		private void addPoint(Point point) {
-			VertexView vertexView = new CirclePointView(point);
-			getChildren().add(vertexView);
-		}
 	}
 }
