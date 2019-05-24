@@ -25,13 +25,13 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private final Behaviour behaviour = new Behaviour();
 
-	private final PolygonMeasurementView polygonMeasurementView;
+	private final PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView();
 
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
-
-	public PolygonMeasurmentController(PolygonMeasurementView polygonMeasurementView, PolygonMeasurement polygonMeasurement) {
-		this.polygonMeasurementView = polygonMeasurementView;
+	
+	public PolygonMeasurmentController(PolygonMeasurement polygonMeasurement) {
+		measurementViewProperty.set(polygonMeasurementView);
 		initSubscriptons();
 		Bindings.bindContentBidirectional(points, polygonMeasurement.getPoints());
 	}

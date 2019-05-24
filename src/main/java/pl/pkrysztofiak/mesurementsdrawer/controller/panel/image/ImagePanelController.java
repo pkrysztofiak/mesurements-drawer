@@ -14,7 +14,6 @@ import pl.pkrysztofiak.mesurementsdrawer.model.Model;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Measurement;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
 import pl.pkrysztofiak.mesurementsdrawer.view.panel.image.ImagePanelView;
 
 public class ImagePanelController {
@@ -27,15 +26,11 @@ public class ImagePanelController {
     private final ImagePanelView imagePanelView;
     private final Model model;
 
-    //TODO do klasy wewnętrznej, żeby nie można było manipulować
     private final ObservableList<Measurement> measurements = FXCollections.observableArrayList();
     private final Observable<Measurement> measurementAddedObservable = JavaFxObservable.additionsOf(measurements);
 
     private final ObservableList<MeasurementView> measurementsViews = FXCollections.observableArrayList();
     private final Observable<MeasurementView> measurementViewAddedObservable = JavaFxObservable.additionsOf(measurementsViews);
-
-//    private final ObservableList<MeasurementViewOld> measurementsViewsOld = FXCollections.observableArrayList();
-//    private final Observable<MeasurementViewOld> measurementViewAddedObservableOld = JavaFxObservable.additionsOf(measurementsViewsOld);
 
     private final ObjectProperty<EventsReceiver> eventsReceiverPropety = new SimpleObjectProperty<>();
     private final Observable<EventsReceiver> eventsReceiverObservable = JavaFxObservable.valuesOf(eventsReceiverPropety);
@@ -49,7 +44,6 @@ public class ImagePanelController {
     }
 
     private void initSubscriptions() {
-//        eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseReleasedObservable().doOnNext(eventsReceiver::mouseReleased)).subscribe();
         eventsReceiverObservable.switchMap(eventsReceiver -> imagePanelView.mouseClickedObservable().doOnNext(eventsReceiver::mouseClicked)).subscribe();
         measurementAddedObservable.subscribe(behaviour::addMeasurement);
     }
@@ -106,22 +100,10 @@ public class ImagePanelController {
     		if (!measurementExists(measurement)) {
     			switch (measurement.getType()) {
 					case POLYGON :
-						PolygonMeasurement polygonMeasurement = (PolygonMeasurement) measurement;
-
-						PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView();
-						PolygonMeasurmentController polygonMeasurmentController = new PolygonMeasurmentController(polygonMeasurementView, polygonMeasurement);
-
-//						PolygonMeasurementViewOld polygonMeasurementViewOld = new PolygonMeasurementViewOld(measurement);
-//						PolygonMeasurmentController polygonMeasurmentController = new PolygonMeasurmentController(polygonMeasurementViewOld, polygonMeasurement);
+						PolygonMeasurmentController polygonMeasurmentController = new PolygonMeasurmentController((PolygonMeasurement) measurement);
+						polygonMeasurmentController.measurementViewInitializedObservable().subscribe(imagePanelView.getChildren()::add);
+						
 						setEventsReceiver(polygonMeasurmentController);
-						imagePanelView.getChildren().add(polygonMeasurementView);
-						//TODO zmienić
-//						measurementsViews.add(polygonMeasurementView);
-
-//						PolygonMeasurementView polygonMeasurementView = new PolygonMeasurementView(measurement);
-//						measurementsViews.add(polygonMeasurementView);
-//				        imagePanelView.getChildren().add(polygonMeasurementView);
-//				        setEventsReceiver(polygonMeasurementView);
 						break;
 					case LINE :
 
