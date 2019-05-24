@@ -15,7 +15,7 @@ import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.PolygonMeasurement;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasurementView;
-import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineEdgeView;
+import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.EdgeView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.LineView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.MouseClickable;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.MouseClickedHandler;
@@ -38,12 +38,6 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private void initSubscriptons() {
 		pointAddedObservable.subscribe(behaviour::onPointAdded);
-
-//		Predicate<Integer> predicate = size -> size > 2;
-//		pointsSizeObservable.filter(predicate)
-//		.switchMap(size -> firstPointViewMouseClickedObservable)
-//		.switchMap(mouseClicked -> Observable.combineLatest(firstPointViewObservale, lastPointViewObservable, behaviour::onFinished))
-//		.subscribe();
 	}
 
 	@Override
@@ -55,14 +49,12 @@ public class PolygonMeasurmentController extends MeasurementController implement
 	public void onMouseClicked(MouseEvent mouseEvent) {
 		Point point = new Point(mouseEvent.getX(), mouseEvent.getY());
 
-
 		points.add(point);
 	}
 
 	private class Behaviour implements MouseClickedHandler<Point> {
 
 		private void onPointAdded(Point point) {
-
 			ListIterator<Point> listIterator = points.listIterator(points.indexOf(point));
 			if (listIterator.hasPrevious()) {
 				point.setPreviousPoint(listIterator.previous());
@@ -74,8 +66,8 @@ public class PolygonMeasurmentController extends MeasurementController implement
 			vertexController.vertexViewChangeObservable().subscribe(behaviour::onVertexViewChanged);
 
 			if (point.hasPrevious()) {
-				LineEdgeView lineEdgeView = new LineEdgeView(point.getPreviousPoint().get(), point);
-				polygonMeasurementView.getEdgesChildren().add(lineEdgeView);
+				EdgeController edgeController = new EdgeController(point.getPreviousPoint().get(), point);
+				edgeController.edgeViewObservable().subscribe(behaviour::onEdgeViewInitialized);
 			}
 		}
 
@@ -96,6 +88,10 @@ public class PolygonMeasurmentController extends MeasurementController implement
 			} else if (oldVertexViewOptional.isPresent() && !newVertexViewOptional.isPresent()) {
 				verticesChildren.remove(oldVertexViewOptional.get());
 			}
+		}
+
+		private void onEdgeViewInitialized(EdgeView edgeView) {
+			polygonMeasurementView.getEdgesChildren().add(edgeView);
 		}
 
 		private void onVertexViewChanged(VertexView vertexView) {
