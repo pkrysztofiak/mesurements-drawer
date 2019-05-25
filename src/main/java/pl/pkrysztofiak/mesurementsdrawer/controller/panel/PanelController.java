@@ -28,20 +28,10 @@ public class PanelController {
 		initSubscriptions();
 	}
 
-//	public void addMeasurement(MeasurementView measurementView) {
-//		imagePanelController.addMeasurement(measurementView);
-//	}
-
 	private void initSubscriptions() {
 		toolbarController.selectedToolObservable().subscribe(behaviour::onSelectedToolChanged);
-//		toolbarController.newMeasurementViewCreatedObservable().subscribe(behaviour::onNewMeasurementViewCreated);
-//		toolbarController.newMeasurementViewCreatedObservable().subscribe(imagePanelController::onNewMeasurementCreated);
-
-		//new
-		toolbarController.newMeasurementCreatedObservable().subscribe(imagePanelController::addMeasurement);
-		//TODO fix it
-//		imagePanelController.measurementFinishedObservable().subscribe(behaviour::onMeasurementFinished);
-
+		toolbarController.newMeasurementCreatedObservable().subscribe(behaviour::onMeasurementCreated);
+		imagePanelController.measurementViewCreatedObservable().subscribe(behaviour::onMeasurmentViewCreated);
 	}
 
 	public ImagePanelController getImagePanelController() {
@@ -62,23 +52,17 @@ public class PanelController {
 
 	private class Behaviour {
 
+		private void onMeasurementCreated(Measurement measurement) {
+			model.addMeasurement(measurement);
+			imagePanelController.setEventsReceiver(measurement);
+		}
+
 		private void onSelectedToolChanged(Tool tool) {
 			imagePanelController.setEventsReceiver(tool);
 		}
 
-//		private void onNewMeasurementViewCreated(MeasurementView measurementView) {
-//			measurementView.finishedObservable().subscribe(this::onMeasurementFinished);
-//		}
-
-		private void onMeasurementFinished(Measurement measurement) {
-			System.out.println("Measurement finished!");
+		private void onMeasurmentViewCreated(Measurement measurement) {
 			imagePanelController.setEventsReceiver(toolbarController.getSelectedTool());
-			model.addMeasurement(measurement);
 		}
-
-//		private void onMeasurementFinished(MeasurementView measurementView) {
-//			imagePanelController.setEventsReceiver(toolbarController.getSelectedTool());
-//			model.addMeasurement(measurementView.getMeasurement());
-//		}
 	}
 }

@@ -11,7 +11,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import pl.pkrysztofiak.mesurementsdrawer.common.EventsReceiver;
 import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.EdgeController;
 import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.MeasurementController;
 import pl.pkrysztofiak.mesurementsdrawer.controller.measurement.VertexController;
@@ -21,7 +20,7 @@ import pl.pkrysztofiak.mesurementsdrawer.view.measurements.polygon.PolygonMeasur
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line.EdgeView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexView;
 
-public class PolygonMeasurmentController extends MeasurementController implements EventsReceiver {
+public class PolygonMeasurmentController extends MeasurementController {
 
 	private final Behaviour behaviour = new Behaviour();
 
@@ -29,9 +28,9 @@ public class PolygonMeasurmentController extends MeasurementController implement
 
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
-	
+
 	public PolygonMeasurmentController(PolygonMeasurement polygonMeasurement) {
-		measurementViewProperty.set(polygonMeasurementView);
+		super(polygonMeasurement);
 		initSubscriptons();
 		Bindings.bindContentBidirectional(points, polygonMeasurement.getPoints());
 	}
@@ -51,9 +50,17 @@ public class PolygonMeasurmentController extends MeasurementController implement
 		points.add(point);
 	}
 
+	public PolygonMeasurementView getPolygonMeasurementView() {
+		return polygonMeasurementView;
+	}
+
+
+
 	private class Behaviour {
 
 		private void onPointAdded(Point point) {
+			point.nextPointObservable().filter(Optional::isPresent).map(Optional::get).subscribe(behaviour::onNextPointCreated);
+
 			ListIterator<Point> listIterator = points.listIterator(points.indexOf(point));
 			if (listIterator.hasPrevious()) {
 				point.setPreviousPoint(listIterator.previous());
@@ -64,16 +71,15 @@ public class PolygonMeasurmentController extends MeasurementController implement
 			vertexController.vertexViewObservable().subscribe(behaviour::onVertexViewInitialized);
 			vertexController.vertexViewChangeObservable().subscribe(behaviour::onVertexViewChanged);
 			vertexController.mouseClickedObservable().map(mouseEvent -> vertexController).subscribe(behaviour::onMouseClicked);
-			
-
-			if (point.hasPrevious()) {
-				EdgeController edgeController = new EdgeController(point.getPreviousPoint().get(), point);
-				edgeController.edgeViewObservable().subscribe(behaviour::onEdgeViewInitialized);
-			}
 		}
 
 		private void onVertexViewInitialized(VertexView vertexView) {
 			polygonMeasurementView.getVerticesChildren().add(vertexView);
+		}
+
+		private void onNextPointCreated(Point point) {
+			EdgeController edgeController = new EdgeController(point.getPreviousPoint().get(), point);
+			edgeController.edgeViewObservable().subscribe(behaviour::onEdgeViewInitialized);
 		}
 
 		private void onVertexViewChanged(Change<Optional<VertexView>> change) {
@@ -94,12 +100,15 @@ public class PolygonMeasurmentController extends MeasurementController implement
 		private void onEdgeViewInitialized(EdgeView edgeView) {
 			polygonMeasurementView.getEdgesChildren().add(edgeView);
 		}
-		
+
 		private void onMouseClicked(VertexController vertexController) {
 		    Point mouseClickedPoint = vertexController.getPoint();
-            if (points.size() > 2 && !mouseClickedPoint.hasPrevious()) {
-                EdgeController edgeController = new EdgeController(points.get(points.size() - 1), mouseClickedPoint);
+            if ((points.size() > 2) && !mouseClickedPoint.hasPrevious()) {
+                Point lastPoint = points.get(points.size() - 1);
+                lastPoint.setNextPoint(mouseClickedPoint);
+				EdgeController edgeController = new EdgeController(lastPoint, mouseClickedPoint);
                 edgeController.edgeViewObservable().subscribe(behaviour::onEdgeViewInitialized);
+                measurementViewCreatedPublishable.onNext(measurement);
 		    }
 		}
 	}
