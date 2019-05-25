@@ -47,12 +47,20 @@ public class Point {
     	return layoutXProperty.doubleValue();
     }
 
+    public void setLayoutX(double value) {
+    	layoutXProperty.set(value);
+    }
+
     public DoubleProperty layoutYProperty() {
         return layoutYProperty;
     }
 
     public Double getLayoutY() {
     	return layoutYProperty.doubleValue();
+    }
+
+    public void setLayoutY(double value) {
+    	layoutYProperty.set(value);
     }
 
     public ObjectProperty<Optional<Point>> previousPointProperty() {

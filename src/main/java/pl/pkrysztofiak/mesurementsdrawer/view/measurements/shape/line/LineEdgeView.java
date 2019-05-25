@@ -1,7 +1,5 @@
 package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.line;
 
-import io.reactivex.Observable;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
@@ -20,9 +18,4 @@ public class LineEdgeView extends EdgeView {
 		line.endYProperty().bindBidirectional(endPoint.layoutYProperty());
 	}
 
-	@Override
-	public Observable<MouseEvent> mouseClickedObservable() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

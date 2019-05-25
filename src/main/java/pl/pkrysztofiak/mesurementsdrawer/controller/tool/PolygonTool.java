@@ -30,11 +30,8 @@ public class PolygonTool extends Tool {
 
     private class Behaviour {
 
-        private void onMouseReleased(MouseEvent mouseEvent) {
-//        	newMeasurementCreatedPublishable.onNext(new PolygonMeasurement(new Point(mouseEvent.getX(), mouseEvent.getY())));
-        }
-
         private void onMouseClicked(MouseEvent mouseEvent) {
+        	System.out.println("PolygonTool.onMouseClicked()");
         	newMeasurementCreatedPublishable.onNext(new PolygonMeasurement(new Point(mouseEvent.getX(), mouseEvent.getY())));
         }
     }

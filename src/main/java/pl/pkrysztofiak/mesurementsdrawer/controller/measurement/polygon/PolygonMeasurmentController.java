@@ -41,7 +41,7 @@ public class PolygonMeasurmentController extends MeasurementController {
 
 	@Override
 	public void onMouseReleased(MouseEvent mouseEvent) {
-		points.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
+//		points.add(new Point(mouseEvent.getX(), mouseEvent.getY()));
 	}
 
 	@Override
@@ -53,8 +53,6 @@ public class PolygonMeasurmentController extends MeasurementController {
 	public PolygonMeasurementView getPolygonMeasurementView() {
 		return polygonMeasurementView;
 	}
-
-
 
 	private class Behaviour {
 

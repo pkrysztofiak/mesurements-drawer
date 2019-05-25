@@ -23,12 +23,40 @@ public class VertexController {
 	private final Observable<Optional<VertexView>> vertexViewOptionalObservable = JavaFxObservable.nullableValuesOf(vertexViewProperty);
 	private final Observable<Change<Optional<VertexView>>> vertexViewChangeObservable = JavaFxObservable.changesOf(vertexViewOptionalProperty);
 
+	private final Observable<MouseEvent> mousePressedObservable = vertexViewObservable.switchMap(VertexView::mousePressedObservable);
+	private final Observable<MouseEvent> mouseDraggedObservable = vertexViewObservable.switchMap(VertexView::mouseDraggedObservable);
+//	private final Observable<Bounds> layoutBoundsObservable = vertexViewObservable.switchMap(VertexView::layoutBoundsObservable);
+
+	private final Observable<Double> mousePressedXObservable = mousePressedObservable.map(MouseEvent::getX);
+	private final Observable<Double> mousePressedYObservable = mousePressedObservable.map(MouseEvent::getY);
+
+	private final Observable<Double> mouseDraggedXObservable = mouseDraggedObservable.map(MouseEvent::getX);
+	private final Observable<Double> mouseDraggedYObservable = mouseDraggedObservable.map(MouseEvent::getY);
+
+	private final Observable<Double> layoutXObservable = vertexViewObservable.switchMap(VertexView::layoutXObservable);
+	private final Observable<Double> layoutYObservable = vertexViewObservable.switchMap(VertexView::layoutYObservable);
 
 	public VertexController(Point point) {
 		this.point = point;
 		initSubscriptins();
 
 		vertexViewProperty.set(new CirclePointView(point));
+
+		mousePressedXObservable.switchMap(pressedX -> mouseDraggedXObservable.withLatestFrom(layoutXObservable.take(1), (draggedX, layoutX) -> {
+			System.out.println("draggedX=" + draggedX + ", pressedX=" + pressedX + ", layoutX=" + layoutX);
+			double delta = draggedX - pressedX;
+			System.out.println("deltaX=" + delta);
+			double result = delta + layoutX;
+			return result;
+		})).subscribe(point::setLayoutX);
+
+		mousePressedYObservable.switchMap(pressedY -> mouseDraggedYObservable.withLatestFrom(layoutYObservable.take(1), (draggedY, layoutY) -> {
+			System.out.println("draggedY=" + draggedY + ", pressedY=" + pressedY + ", layoutY=" + layoutY);
+			double delta = draggedY - pressedY;
+			System.out.println("deltaY=" + delta);
+			double result = delta + layoutY;
+			return result;
+		})).subscribe(point::setLayoutY);
 	}
 
 	private void initSubscriptins() {
@@ -49,5 +77,17 @@ public class VertexController {
 
 	public Point getPoint() {
 		return point;
+	}
+
+	private double translate(double draggedY, double pressedY, double layoutY) {
+		System.out.println("draggedY=" + draggedY + ", pressedY=" + pressedY + ", layoutY=" + layoutY);
+		double delta = draggedY - pressedY;
+		System.out.println("deltaY=" + delta);
+		double result = delta + layoutY;
+		return result;
+	}
+
+	class Behaviour {
+
 	}
 }
