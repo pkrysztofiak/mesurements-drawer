@@ -17,17 +17,17 @@ public class PolygonMeasurementView extends MeasurementView {
 	public PolygonMeasurementView() {
 //		verticesPane.setPickOnBounds(false);
 //		edgesPane.setPickOnBounds(false);
-//		getChildren().addAll(edgesPane, verticesPane);
+		getChildren().addAll(edgesPane, verticesPane);
 	}
 
 	public ObservableList<Node> getVerticesChildren() {
-		return getChildren();
-//		return verticesPane.getChildren();
+//		return getChildren();
+		return verticesPane.getChildren();
 	}
 
 	public ObservableList<Node> getEdgesChildren() {
-		return getChildren();
-//		return edgesPane.getChildren();
+//		return getChildren();
+		return edgesPane.getChildren();
 	}
 
 	private class Behaviour {
