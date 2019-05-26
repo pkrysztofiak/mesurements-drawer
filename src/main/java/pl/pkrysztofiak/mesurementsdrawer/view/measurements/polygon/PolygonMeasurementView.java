@@ -7,30 +7,27 @@ import pl.pkrysztofiak.mesurementsdrawer.view.measurements.MeasurementView;
 
 public class PolygonMeasurementView extends MeasurementView {
 
-//	private final Pane verticesPane = new Pane();
-	private final Group verticesPane = new Group();
-//	private final Pane edgesPane = new Pane();
 	private final Group edgesPane = new Group();
-
-	private final Behaviour behaviour = new Behaviour();
+	private final Group verticesPane = new Group();
+	private final Group group = new Group(edgesPane, verticesPane);
 
 	public PolygonMeasurementView() {
-//		verticesPane.setPickOnBounds(false);
-//		edgesPane.setPickOnBounds(false);
-		getChildren().addAll(edgesPane, verticesPane);
+		getChildren().add(group);
+	}
+
+	public void setTranslateXGroup(double value) {
+		group.setTranslateX(value);
+	}
+
+	public void setTranslateYGroup(double value) {
+		group.setTranslateY(value);
 	}
 
 	public ObservableList<Node> getVerticesChildren() {
-//		return getChildren();
 		return verticesPane.getChildren();
 	}
 
 	public ObservableList<Node> getEdgesChildren() {
-//		return getChildren();
 		return edgesPane.getChildren();
-	}
-
-	private class Behaviour {
-
 	}
 }

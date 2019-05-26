@@ -5,9 +5,11 @@ import java.util.Optional;
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Change;
+import io.reactivex.subjects.PublishSubject;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.MouseEvent;
+import pl.pkrysztofiak.mesurementsdrawer.common.utils.DragProcessor;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.CirclePointView;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexView;
@@ -15,6 +17,8 @@ import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point.VertexVie
 public class VertexController {
 
 	private final Point point;
+
+	private final DragProcessor dragProcessor = new DragProcessor();
 
 	private final ObjectProperty<VertexView> vertexViewProperty = new SimpleObjectProperty<>();
 	private final ObjectProperty<Optional<VertexView>> vertexViewOptionalProperty = new SimpleObjectProperty<>(Optional.empty());
@@ -25,38 +29,29 @@ public class VertexController {
 
 	private final Observable<MouseEvent> mousePressedObservable = vertexViewObservable.switchMap(VertexView::mousePressedObservable);
 	private final Observable<MouseEvent> mouseDraggedObservable = vertexViewObservable.switchMap(VertexView::mouseDraggedObservable);
-//	private final Observable<Bounds> layoutBoundsObservable = vertexViewObservable.switchMap(VertexView::layoutBoundsObservable);
+	private final Observable<MouseEvent> mouseReleasedObservable = vertexViewObservable.switchMap(VertexView::mouseReleasedObservable);
 
-	private final Observable<Double> mousePressedXObservable = mousePressedObservable.map(MouseEvent::getX);
-	private final Observable<Double> mousePressedYObservable = mousePressedObservable.map(MouseEvent::getY);
-
-	private final Observable<Double> mouseDraggedXObservable = mouseDraggedObservable.map(MouseEvent::getX);
-	private final Observable<Double> mouseDraggedYObservable = mouseDraggedObservable.map(MouseEvent::getY);
-
-	private final Observable<Double> layoutXObservable = vertexViewObservable.switchMap(VertexView::layoutXObservable);
-	private final Observable<Double> layoutYObservable = vertexViewObservable.switchMap(VertexView::layoutYObservable);
+	private final PublishSubject<Double> xTranslatePublishable = PublishSubject.create();
+	private final PublishSubject<Double> yTranslatePublishable = PublishSubject.create();
 
 	public VertexController(Point point) {
 		this.point = point;
 		initSubscriptins();
-
 		vertexViewProperty.set(new CirclePointView(point));
 
-		mousePressedXObservable.switchMap(pressedX -> mouseDraggedXObservable.withLatestFrom(layoutXObservable.take(1), (draggedX, layoutX) -> {
-			System.out.println("draggedX=" + draggedX + ", pressedX=" + pressedX + ", layoutX=" + layoutX);
-			double delta = draggedX - pressedX;
-			System.out.println("deltaX=" + delta);
-			double result = delta + layoutX;
-			return result;
-		})).subscribe(point::setLayoutX);
+		initDragProcessor();
+	}
 
-		mousePressedYObservable.switchMap(pressedY -> mouseDraggedYObservable.withLatestFrom(layoutYObservable.take(1), (draggedY, layoutY) -> {
-			System.out.println("draggedY=" + draggedY + ", pressedY=" + pressedY + ", layoutY=" + layoutY);
-			double delta = draggedY - pressedY;
-			System.out.println("deltaY=" + delta);
-			double result = delta + layoutY;
-			return result;
-		})).subscribe(point::setLayoutY);
+	private void initDragProcessor() {
+		mousePressedObservable.subscribe(dragProcessor.mousePressedPublishable()::onNext);
+		mouseDraggedObservable.subscribe(dragProcessor.mouseDraggedPublishable()::onNext);
+		mouseReleasedObservable.subscribe(dragProcessor.mouseReleasedPublishable()::onNext);
+
+		point.layoutXObservable().subscribe(dragProcessor::setLayoutX);
+		point.layoutYObservable().subscribe(dragProcessor::setLayoutY);
+
+		dragProcessor.xResultObservable().subscribe(point::setLayoutX);
+		dragProcessor.yResultObservable().subscribe(point::setLayoutY);
 	}
 
 	private void initSubscriptins() {
@@ -75,16 +70,16 @@ public class VertexController {
 		return vertexViewObservable.switchMap(VertexView::mouseClickedObservable);
 	}
 
-	public Point getPoint() {
-		return point;
+	public Observable<Double> xTranslateObservable() {
+		return xTranslatePublishable;
 	}
 
-	private double translate(double draggedY, double pressedY, double layoutY) {
-		System.out.println("draggedY=" + draggedY + ", pressedY=" + pressedY + ", layoutY=" + layoutY);
-		double delta = draggedY - pressedY;
-		System.out.println("deltaY=" + delta);
-		double result = delta + layoutY;
-		return result;
+	public Observable<Double> yTranslateObservable() {
+		return yTranslatePublishable;
+	}
+
+	public Point getPoint() {
+		return point;
 	}
 
 	class Behaviour {

@@ -2,7 +2,6 @@ package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
-import javafx.geometry.Bounds;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -19,12 +18,12 @@ public class CirclePointView extends VertexView {
 	private final Circle circle = new Circle(8., paint);
 
 	private final Observable<Boolean> hoverObservable = JavaFxObservable.valuesOf(circle.hoverProperty());
-	private final Observable<Bounds> layoutBoundsObservable = JavaFxObservable.valuesOf(circle.layoutBoundsProperty());
 
 	private final Observable<MouseEvent> mouseClickedObservable = JavaFxObservable.eventsOf(circle, MouseEvent.MOUSE_CLICKED);
 
 	private final Observable<MouseEvent> mousePressedObservable = JavaFxObservable.eventsOf(circle, MouseEvent.MOUSE_PRESSED);
 	private final Observable<MouseEvent> mouseDraggedObservable = JavaFxObservable.eventsOf(circle, MouseEvent.MOUSE_DRAGGED);
+	private final Observable<MouseEvent> mouseReleasedObservale = JavaFxObservable.eventsOf(circle, MouseEvent.MOUSE_RELEASED);
 
 	private final Observable<Double> layoutXObservable = JavaFxObservable.valuesOf(circle.centerXProperty()).map(Number::doubleValue);
 	private final Observable<Double> layoutYObservable = JavaFxObservable.valuesOf(circle.centerYProperty()).map(Number::doubleValue);
@@ -34,10 +33,12 @@ public class CirclePointView extends VertexView {
 		circle.centerXProperty().bindBidirectional(point.layoutXProperty());
 		circle.centerYProperty().bindBidirectional(point.layoutYProperty());
 
-//		layoutXProperty().bindBidirectional(point.layoutXProperty());
-//		circle.layoutYProperty().bindBidirectional(point.layoutYProperty());
 		initSubscriptions();
 		getChildren().add(circle);
+
+		circle.layoutXProperty();
+
+		mouseReleasedObservale.subscribe(next -> System.out.println("POWINNO BYĆ RAZ"));
 	}
 
 
@@ -52,23 +53,12 @@ public class CirclePointView extends VertexView {
 
 	@Override
 	public Observable<MouseEvent> mouseClickedObservable() {
-		return mouseClickedObservable.doOnNext(mouseEvent -> {
-			mouseEvent.consume();
-			System.out.println("mouseClicked consumed");
-		});
+		return mouseClickedObservable;
 	}
 
 	@Override
 	public Observable<MouseEvent> mousePressedObservable() {
-		return mousePressedObservable.doOnNext(mouseEvent -> {
-			mouseEvent.consume();
-			System.out.println("mousePressed consumed");
-		});
-	}
-
-	@Override
-	public Observable<Bounds> layoutBoundsObservable() {
-		return layoutBoundsObservable;
+		return mousePressedObservable;
 	}
 
 	@Override
@@ -79,6 +69,11 @@ public class CirclePointView extends VertexView {
 	@Override
 	public Observable<Double> layoutYObservable() {
 		return layoutYObservable;
+	}
+
+	@Override
+	public Observable<MouseEvent> mouseReleasedObservable() {
+		return mouseReleasedObservale;
 	}
 
 	private class Behaviour {

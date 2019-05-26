@@ -6,6 +6,7 @@ import java.util.Optional;
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Change;
+import io.reactivex.subjects.PublishSubject;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,9 @@ public class PolygonMeasurmentController extends MeasurementController {
 
 	private final ObservableList<Point> points = FXCollections.observableArrayList();
 	private final Observable<Point> pointAddedObservable = JavaFxObservable.additionsOf(points);
+
+	private final PublishSubject<Double> xTranslatePublishable = PublishSubject.create();
+	private final PublishSubject<Double> yTranslatePublishable = PublishSubject.create();
 
 	public PolygonMeasurmentController(PolygonMeasurement polygonMeasurement) {
 		super(polygonMeasurement);
@@ -69,6 +73,9 @@ public class PolygonMeasurmentController extends MeasurementController {
 			vertexController.vertexViewObservable().subscribe(behaviour::onVertexViewInitialized);
 			vertexController.vertexViewChangeObservable().subscribe(behaviour::onVertexViewChanged);
 			vertexController.mouseClickedObservable().map(mouseEvent -> vertexController).subscribe(behaviour::onMouseClicked);
+
+			vertexController.xTranslateObservable().subscribe(polygonMeasurementView::setTranslateXGroup);
+			vertexController.yTranslateObservable().subscribe(polygonMeasurementView::setTranslateYGroup);
 		}
 
 		private void onVertexViewInitialized(VertexView vertexView) {

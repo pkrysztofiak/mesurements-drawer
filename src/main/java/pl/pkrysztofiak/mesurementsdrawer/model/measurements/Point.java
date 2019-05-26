@@ -22,8 +22,11 @@ public class Point {
     private final Observable<Optional<Point>> nextPointObservable = JavaFxObservable.valuesOf(nextPointProperty);
     private final Observable<Change<Optional<Point>>> nextPointChangedObservable = JavaFxObservable.changesOf(nextPointProperty);
 
-    private DoubleProperty layoutXProperty = new SimpleDoubleProperty();
+    private final DoubleProperty layoutXProperty = new SimpleDoubleProperty();
+    private final Observable<Double> layoutXObservable = JavaFxObservable.valuesOf(layoutXProperty).map(Number::doubleValue);
+
     private DoubleProperty layoutYProperty = new SimpleDoubleProperty();
+    private final Observable<Double> layoutYObservable = JavaFxObservable.valuesOf(layoutYProperty).map(Number::doubleValue);
 
     private BooleanProperty selectedProperty = new SimpleBooleanProperty();
 
@@ -43,13 +46,22 @@ public class Point {
         return layoutXProperty;
     }
 
+    public Observable<Double> layoutXObservable() {
+    	return layoutXObservable;
+    }
+
     public Double getLayoutX() {
     	return layoutXProperty.doubleValue();
+    }
+
+    public Observable<Double> layoutYObservable() {
+    	return layoutYObservable;
     }
 
     public void setLayoutX(double value) {
     	layoutXProperty.set(value);
     }
+
 
     public DoubleProperty layoutYProperty() {
         return layoutYProperty;
