@@ -12,9 +12,9 @@ public class LineEdgeView extends EdgeView {
 		super(startPoint, endPoint);
 		line.setStroke(Color.YELLOW);
 		getChildren().add(line);
-		line.startXProperty().bindBidirectional(startPoint.layoutXProperty());
+		line.startXProperty().bindBidirectional(startPoint.xTranslateProperty());
 		line.startYProperty().bindBidirectional(startPoint.layoutYProperty());
-		line.endXProperty().bindBidirectional(endPoint.layoutXProperty());
+		line.endXProperty().bindBidirectional(endPoint.xTranslateProperty());
 		line.endYProperty().bindBidirectional(endPoint.layoutYProperty());
 	}
 

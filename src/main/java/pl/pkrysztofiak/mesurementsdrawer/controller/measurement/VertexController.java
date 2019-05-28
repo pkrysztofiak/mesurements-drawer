@@ -47,11 +47,15 @@ public class VertexController {
 		mouseDraggedObservable.subscribe(dragProcessor.mouseDraggedPublishable()::onNext);
 		mouseReleasedObservable.subscribe(dragProcessor.mouseReleasedPublishable()::onNext);
 
-		point.layoutXObservable().subscribe(dragProcessor::setLayoutX);
-		point.layoutYObservable().subscribe(dragProcessor::setLayoutY);
+		point.xTranslateObservable().subscribe(dragProcessor::setLayoutX);
+		point.yTranslateObservable().subscribe(dragProcessor::setLayoutY);
 
-		dragProcessor.xResultObservable().subscribe(point::setLayoutX);
-		dragProcessor.yResultObservable().subscribe(point::setLayoutY);
+//		dragProcessor.xResultObservable().subscribe(point::setLayoutX);
+//		dragProcessor.yResultObservable().subscribe(point::setLayoutY);
+//		dragProcessor.xResultObservable().subscribe(xTranslatePublishable::onNext);
+//		dragProcessor.yResultObservable().subscribe(yTranslatePublishable::onNext);
+		dragProcessor.xTranslateResultObservable().subscribe(point::setXTranslate);
+		dragProcessor.yTranslateResultObservable().subscribe(point::setYTranslate);
 	}
 
 	private void initSubscriptins() {

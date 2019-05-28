@@ -22,17 +22,17 @@ public class Point {
     private final Observable<Optional<Point>> nextPointObservable = JavaFxObservable.valuesOf(nextPointProperty);
     private final Observable<Change<Optional<Point>>> nextPointChangedObservable = JavaFxObservable.changesOf(nextPointProperty);
 
-    private final DoubleProperty layoutXProperty = new SimpleDoubleProperty();
-    private final Observable<Double> layoutXObservable = JavaFxObservable.valuesOf(layoutXProperty).map(Number::doubleValue);
+    private final DoubleProperty xTranslateProperty = new SimpleDoubleProperty();
+    private final Observable<Double> xTranslateObservable = JavaFxObservable.valuesOf(xTranslateProperty).map(Number::doubleValue);
 
-    private DoubleProperty layoutYProperty = new SimpleDoubleProperty();
-    private final Observable<Double> layoutYObservable = JavaFxObservable.valuesOf(layoutYProperty).map(Number::doubleValue);
+    private final DoubleProperty yTranslateProperty = new SimpleDoubleProperty();
+    private final Observable<Double> yTranslateObservable = JavaFxObservable.valuesOf(yTranslateProperty).map(Number::doubleValue);
 
     private BooleanProperty selectedProperty = new SimpleBooleanProperty();
 
     public Point(double layoutX, double layoutY) {
-        layoutXProperty.set(layoutX);
-        layoutYProperty.set(layoutY);
+        xTranslateProperty.set(layoutX);
+        yTranslateProperty.set(layoutY);
 
         initSubscriptions();
     }
@@ -42,37 +42,37 @@ public class Point {
     	nextPointChangedObservable.subscribe(this::onNextPointChanged);
     }
 
-    public DoubleProperty layoutXProperty() {
-        return layoutXProperty;
+    public DoubleProperty xTranslateProperty() {
+        return xTranslateProperty;
     }
 
-    public Observable<Double> layoutXObservable() {
-    	return layoutXObservable;
+    public Observable<Double> xTranslateObservable() {
+    	return xTranslateObservable;
     }
 
     public Double getLayoutX() {
-    	return layoutXProperty.doubleValue();
+    	return xTranslateProperty.doubleValue();
     }
 
-    public Observable<Double> layoutYObservable() {
-    	return layoutYObservable;
+    public Observable<Double> yTranslateObservable() {
+    	return yTranslateObservable;
     }
 
-    public void setLayoutX(double value) {
-    	layoutXProperty.set(value);
+    public void setXTranslate(double value) {
+    	xTranslateProperty.set(value);
     }
 
 
     public DoubleProperty layoutYProperty() {
-        return layoutYProperty;
+        return yTranslateProperty;
     }
 
     public Double getLayoutY() {
-    	return layoutYProperty.doubleValue();
+    	return yTranslateProperty.doubleValue();
     }
 
-    public void setLayoutY(double value) {
-    	layoutYProperty.set(value);
+    public void setYTranslate(double value) {
+    	yTranslateProperty.set(value);
     }
 
     public ObjectProperty<Optional<Point>> previousPointProperty() {
@@ -153,6 +153,6 @@ public class Point {
 
 	@Override
 	public String toString() {
-		return "Point[x=" + layoutXProperty.get() + ", y=" + layoutYProperty.get() + ", previous=" + getPreviousPoint().map(point -> "Point[x" + point.getLayoutX() + ", y=" + point.getLayoutY() + "]").orElse("none") + ", next=" + getNextPoint().map(point -> "Point[x" + point.getLayoutX() + ", y=" + point.getLayoutY() + "]").orElse("none") + "]";
+		return "Point[x=" + xTranslateProperty.get() + ", y=" + yTranslateProperty.get() + ", previous=" + getPreviousPoint().map(point -> "Point[x" + point.getLayoutX() + ", y=" + point.getLayoutY() + "]").orElse("none") + ", next=" + getNextPoint().map(point -> "Point[x" + point.getLayoutX() + ", y=" + point.getLayoutY() + "]").orElse("none") + "]";
 	}
 }

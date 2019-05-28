@@ -74,7 +74,7 @@ public class PolygonMeasurmentController extends MeasurementController {
 			vertexController.vertexViewChangeObservable().subscribe(behaviour::onVertexViewChanged);
 			vertexController.mouseClickedObservable().map(mouseEvent -> vertexController).subscribe(behaviour::onMouseClicked);
 
-			vertexController.xTranslateObservable().subscribe(polygonMeasurementView::setTranslateXGroup);
+			vertexController.xTranslateObservable().doOnNext(x -> System.out.println("xTranslate=" + x)).subscribe(polygonMeasurementView::setTranslateXGroup);
 			vertexController.yTranslateObservable().subscribe(polygonMeasurementView::setTranslateYGroup);
 		}
 

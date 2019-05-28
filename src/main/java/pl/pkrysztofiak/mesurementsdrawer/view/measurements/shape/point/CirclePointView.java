@@ -2,6 +2,8 @@ package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
+import io.reactivex.subjects.PublishSubject;
+import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -28,17 +30,26 @@ public class CirclePointView extends VertexView {
 	private final Observable<Double> layoutXObservable = JavaFxObservable.valuesOf(circle.centerXProperty()).map(Number::doubleValue);
 	private final Observable<Double> layoutYObservable = JavaFxObservable.valuesOf(circle.centerYProperty()).map(Number::doubleValue);
 
+	private final Observable<Parent> parentObservable = JavaFxObservable.valuesOf(parentProperty());
+	private final PublishSubject<MouseEvent> parentMouseDraggedPublishable = PublishSubject.create();
+
 	public CirclePointView(Point point) {
 		super(point);
-		circle.centerXProperty().bindBidirectional(point.layoutXProperty());
-		circle.centerYProperty().bindBidirectional(point.layoutYProperty());
+		circle.translateXProperty().bindBidirectional(point.xTranslateProperty());
+		circle.translateYProperty().bindBidirectional(point.layoutYProperty());
 
 		initSubscriptions();
 		getChildren().add(circle);
 
 		circle.layoutXProperty();
 
-		mouseReleasedObservale.subscribe(next -> System.out.println("POWINNO BYĆ RAZ"));
+		parentObservable.subscribe(parent -> {
+			parent.addEventFilter(MouseEvent.MOUSE_DRAGGED, parentMouseDraggedPublishable::onNext);
+		});
+//
+//		sceneObservable.subscribe(scene -> {
+//			scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, sceneMouseDraggedPublishable::onNext);
+//		});
 	}
 
 
@@ -49,6 +60,8 @@ public class CirclePointView extends VertexView {
 	@Override
 	public Observable<MouseEvent> mouseDraggedObservable() {
 		return mouseDraggedObservable.doOnNext(MouseEvent::consume);
+//		return sceneMouseDraggedObservable;
+//		return parentMouseDraggedPublishable;
 	}
 
 	@Override

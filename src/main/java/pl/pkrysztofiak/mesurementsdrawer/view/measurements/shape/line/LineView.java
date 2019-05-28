@@ -24,13 +24,13 @@ public class LineView extends ConnectorView {
 	protected void onStartPointViewInited(Point startPoint) {
 		System.out.println("startPoint=" + startPoint);
 
-		line.startXProperty().bindBidirectional(startPoint.layoutXProperty());
+		line.startXProperty().bindBidirectional(startPoint.xTranslateProperty());
 		line.startYProperty().bindBidirectional(startPoint.layoutYProperty());
 	}
 
 	@Override
 	protected void onEndPointViewInited(Point endPoint) {
-		line.endXProperty().bindBidirectional(endPoint.layoutXProperty());
+		line.endXProperty().bindBidirectional(endPoint.xTranslateProperty());
 		line.endYProperty().bindBidirectional(endPoint.layoutYProperty());
 	}
 

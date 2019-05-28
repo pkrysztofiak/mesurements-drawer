@@ -13,14 +13,17 @@ public class PolygonMeasurementView extends MeasurementView {
 
 	public PolygonMeasurementView() {
 		getChildren().add(group);
+//		getChildren().addAll(edgesPane, verticesPane);
 	}
 
 	public void setTranslateXGroup(double value) {
 		group.setTranslateX(value);
+//		setTranslateX(value);
 	}
 
 	public void setTranslateYGroup(double value) {
 		group.setTranslateY(value);
+//		setTranslateY(value);
 	}
 
 	public ObservableList<Node> getVerticesChildren() {
