@@ -3,6 +3,7 @@ package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point;
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.subjects.PublishSubject;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -41,15 +42,9 @@ public class CirclePointView extends VertexView {
 		initSubscriptions();
 		getChildren().add(circle);
 
-		circle.layoutXProperty();
-
 		parentObservable.subscribe(parent -> {
 			parent.addEventFilter(MouseEvent.MOUSE_DRAGGED, parentMouseDraggedPublishable::onNext);
 		});
-//
-//		sceneObservable.subscribe(scene -> {
-//			scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, sceneMouseDraggedPublishable::onNext);
-//		});
 	}
 
 
@@ -89,11 +84,19 @@ public class CirclePointView extends VertexView {
 		return mouseReleasedObservale;
 	}
 
+	@Override
+	public Node getDraggableNode() {
+		return circle;
+	}
+
 	private class Behaviour {
 
 		private void onHover(boolean value) {
 			circle.setFill(value ? hoverPaint : paint);
 		}
 	}
+
+
+
 
 }

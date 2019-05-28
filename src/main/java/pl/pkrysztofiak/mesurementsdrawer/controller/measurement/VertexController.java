@@ -43,19 +43,24 @@ public class VertexController {
 	}
 
 	private void initDragProcessor() {
-		mousePressedObservable.subscribe(dragProcessor.mousePressedPublishable()::onNext);
-		mouseDraggedObservable.subscribe(dragProcessor.mouseDraggedPublishable()::onNext);
-		mouseReleasedObservable.subscribe(dragProcessor.mouseReleasedPublishable()::onNext);
+		vertexViewObservable.map(VertexView::getDraggableNode).subscribe(dragProcessor::setNode);
 
-		point.xTranslateObservable().subscribe(dragProcessor::setLayoutX);
-		point.yTranslateObservable().subscribe(dragProcessor::setLayoutY);
+		dragProcessor.translateXResultObservable().subscribe(point::setTranslateX);
+		dragProcessor.translateYResultObservable().subscribe(point::setTranslateY);
+
+//		mousePressedObservable.subscribe(dragProcessor.mousePressedPublishable()::onNext);
+//		mouseDraggedObservable.subscribe(dragProcessor.mouseDraggedPublishable()::onNext);
+//		mouseReleasedObservable.subscribe(dragProcessor.mouseReleasedPublishable()::onNext);
+
+//		point.xTranslateObservable().subscribe(dragProcessor::setLayoutX);
+//		point.yTranslateObservable().subscribe(dragProcessor::setLayoutY);
 
 //		dragProcessor.xResultObservable().subscribe(point::setLayoutX);
 //		dragProcessor.yResultObservable().subscribe(point::setLayoutY);
 //		dragProcessor.xResultObservable().subscribe(xTranslatePublishable::onNext);
 //		dragProcessor.yResultObservable().subscribe(yTranslatePublishable::onNext);
-		dragProcessor.xTranslateResultObservable().subscribe(point::setXTranslate);
-		dragProcessor.yTranslateResultObservable().subscribe(point::setYTranslate);
+//		dragProcessor.xTranslateResultObservable().subscribe(point::setXTranslate);
+//		dragProcessor.yTranslateResultObservable().subscribe(point::setYTranslate);
 	}
 
 	private void initSubscriptins() {

@@ -58,7 +58,7 @@ public class Point {
     	return yTranslateObservable;
     }
 
-    public void setXTranslate(double value) {
+    public void setTranslateX(double value) {
     	xTranslateProperty.set(value);
     }
 
@@ -71,7 +71,7 @@ public class Point {
     	return yTranslateProperty.doubleValue();
     }
 
-    public void setYTranslate(double value) {
+    public void setTranslateY(double value) {
     	yTranslateProperty.set(value);
     }
 

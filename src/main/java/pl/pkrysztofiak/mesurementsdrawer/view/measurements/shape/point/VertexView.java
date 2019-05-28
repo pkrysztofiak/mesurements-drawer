@@ -2,6 +2,7 @@ package pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.point;
 
 import io.reactivex.Observable;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import pl.pkrysztofiak.mesurementsdrawer.model.measurements.Point;
 import pl.pkrysztofiak.mesurementsdrawer.view.measurements.shape.ShapeView;
@@ -29,5 +30,7 @@ public abstract class VertexView extends ShapeView {
 	public abstract Observable<MouseEvent> mouseReleasedObservable();
 	public abstract Observable<Double> layoutXObservable();
 	public abstract Observable<Double> layoutYObservable();
+	public abstract Node getDraggableNode();
+
 
 }
